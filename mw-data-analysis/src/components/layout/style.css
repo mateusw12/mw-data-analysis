@@ -1,0 +1,74 @@
+.container {
+    display: grid;
+    grid-template-areas:
+        "header header"
+        "sidebar content";
+    grid-template-columns: 200px 1fr;
+    grid-template-rows: 70px 1fr;
+    height: 100vh;
+    overflow: hidden;
+}
+
+/* #004AAD */
+/* #5271FF */
+/* #0097B2 */
+/* #0CC0DF */
+/* #5CE1E6 */
+
+.header {
+    grid-area: header;
+    background: linear-gradient(to right, #2e6bfb8c, #004AAD 90%);
+    color: #fff;
+    display: flex;
+    align-items: center;
+    padding: 10px;
+    margin: 0;
+    justify-content: space-between;
+}
+
+.sidebar {
+    grid-area: sidebar;
+    background: linear-gradient(to bottom, #2e6bfb8c, #004AAD 100%);
+    color: #fff;
+    padding: 10px;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+}
+
+.content {
+    grid-area: content;
+    background-color: #eee;
+    padding: 20px;
+    overflow: auto;
+}
+
+/* HEADER */
+
+.logo img {
+    width: 100px;
+    height: 100px;
+    padding-left: 40px;
+}
+
+.header-right {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.user-info {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.logout-button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: transparent;
+    background-color: transparent;
+    color: white;
+}
