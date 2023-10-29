@@ -7,12 +7,12 @@
     grid-template-rows: 70px 1fr;
     height: 100vh;
     overflow: hidden;
-    transition: 0.5s;
+    transition: 0.3s;
 }
 
 .container.collapsed {
     grid-template-columns: 70px 1fr;
-    transition: 0.5s;
+    transition: 0.3s;
 }
 
 .content {
@@ -70,11 +70,6 @@
 }
 
 /* SIDER */
-.sidebar.collapsed {
-    width: 50px;
-    transition: 0.5s;
-}
-
 .collapse-button {
     background: #333;
     color: #fff;
@@ -97,8 +92,22 @@
     width: 200px;
     transition: width 0.3s;
     position: relative;
+    overflow: auto;
+}
+
+.sidebar.collapsed {
+    width: 50px;
+    transition: 0.3s;
 }
 
 .sidebar-content {
     flex: 1;
+    flex-direction: column;
+    padding: 5px;
+}
+
+.sidebar-bottom {
+    padding: 10px;
+    text-align: center;
+    margin-bottom: 10px;
 }
