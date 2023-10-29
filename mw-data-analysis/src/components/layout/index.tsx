@@ -2,6 +2,7 @@ import { ReactNode, useState } from "react";
 import "./style.css";
 import Header from "./header";
 import SiderBar from "./sider";
+import { Breadcrumb } from "antd";
 
 interface BaseLayoutProps {
   children: ReactNode;
@@ -19,7 +20,18 @@ const BaseLayout = ({ children }: BaseLayoutProps) => {
       <div className={`container ${collapsed ? "collapsed" : ""}`}>
         <Header />
         <SiderBar collapse={handleColapsed} />
-        <div className="content">{children}</div>
+        <div className="content">
+          <Breadcrumb
+            items={[
+              {
+                title: "Home",
+              },
+            ]}
+          />
+          <div className="main">
+            <div>{children}</div>
+          </div>
+        </div>
       </div>
     </>
   );

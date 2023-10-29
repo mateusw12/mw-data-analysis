@@ -18,10 +18,13 @@
 .content {
     grid-area: content;
     background-color: #eee;
-    padding: 20px;
+    padding: 10px 30px;
     overflow: auto;
 }
 
+.main {
+    padding: 20px
+}
 /* #004AAD */
 /* #5271FF */
 /* #0097B2 */
