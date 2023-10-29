@@ -1,4 +1,5 @@
 import "./App.css";
+import Home from "./components/home";
 import BaseLayout from "./components/layout";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 
@@ -7,7 +8,9 @@ function App() {
     <>
       <BrowserRouter>
         <BaseLayout>
-          <Routes></Routes>
+          <Routes>
+            <Route path="/" Component={Home} />
+          </Routes>
         </BaseLayout>
       </BrowserRouter>
     </>

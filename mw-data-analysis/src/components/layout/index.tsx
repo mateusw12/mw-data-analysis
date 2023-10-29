@@ -3,6 +3,7 @@ import "./style.css";
 import Header from "./header";
 import SiderBar from "./sider";
 import { Breadcrumb } from "antd";
+import { useLocation } from "react-router-dom";
 
 interface BaseLayoutProps {
   children: ReactNode;
@@ -14,6 +15,8 @@ const BaseLayout = ({ children }: BaseLayoutProps) => {
   const handleColapsed = (collapsed: boolean) => {
     setCollapsed(collapsed);
   };
+  const location = useLocation();
+  const currentPath = location.pathname;
 
   return (
     <>
@@ -21,16 +24,20 @@ const BaseLayout = ({ children }: BaseLayoutProps) => {
         <Header />
         <SiderBar collapse={handleColapsed} />
         <div className="content">
-          <Breadcrumb
-            items={[
-              {
-                title: "Home",
-              },
-            ]}
-          />
-          <div className="main">
-            <div>{children}</div>
-          </div>
+          {currentPath ? (
+            <></>
+          ) : (
+            <>
+              <Breadcrumb
+                items={[
+                  {
+                    title: "Home",
+                  },
+                ]}
+              />
+            </>
+          )}
+          <div className="main">{children}</div>
         </div>
       </div>
     </>

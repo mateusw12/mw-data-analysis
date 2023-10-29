@@ -1,13 +1,18 @@
 import "../style.css";
 import { Button } from "antd";
 import { FiLogOut } from "react-icons/fi";
+import { Link } from "react-router-dom";
 const Header = () => {
+
+
   return (
     <>
       <div className="header">
-        <div className="logo">
-          <img src="/src/assets/pages/loog.png" alt="Logo" />
-        </div>
+        <Link to={"/"}>
+          <div className="logo">
+            <img src="/src/assets/pages/loog.png" alt="Logo" />
+          </div>
+        </Link>
         <div className="header-right">
           <div className="user-info">
             <p>User Name</p>
