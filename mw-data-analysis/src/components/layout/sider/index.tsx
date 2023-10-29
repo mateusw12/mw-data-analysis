@@ -29,6 +29,7 @@ function getItem(
   label: React.ReactNode,
   key?: React.Key | null,
   icon?: React.ReactNode,
+  disabled?: boolean,
   children?: MenuItem[],
   type?: "group"
 ): MenuItem {
@@ -38,6 +39,7 @@ function getItem(
     children,
     label,
     type,
+    disabled,
   } as MenuItem;
 }
 
@@ -54,6 +56,7 @@ const SiderBar = (props: SideBarProps) => {
       "Análise",
       "analytics",
       <BsTable style={{ transform: "scale(1.2)" }} />,
+      false,
       [
         getItem(
           "Consultar",
@@ -72,6 +75,7 @@ const SiderBar = (props: SideBarProps) => {
       "Dashboard",
       "dashboard",
       <AiOutlineDashboard style={{ transform: "scale(1.2)" }} />,
+      true,
       [
         getItem(
           "Consultar",
@@ -90,6 +94,7 @@ const SiderBar = (props: SideBarProps) => {
       "Estatistica",
       "statistic",
       <BsBarChart style={{ transform: "scale(1.2)" }} />,
+      true,
       [
         getItem(
           "Consultar",
