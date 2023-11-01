@@ -13,7 +13,7 @@ const ErrorPage = () => {
       <Result
         status="404"
         title="404"
-        subTitle="Desculpe, a página que você tentour visitar não existe!"
+        subTitle="Desculpe, a página que você tentou visitar não existe!"
         extra={
           <Button onClick={onBackHomeClick} type="primary">
             Voltar ao Início
