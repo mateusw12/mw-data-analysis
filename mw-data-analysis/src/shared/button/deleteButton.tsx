@@ -1,7 +1,7 @@
 import Button from "@mui/material/Button";
 import { MdDeleteOutline } from "react-icons/md";
 
-const DeleteButton = (props: { onClick: () => void, disabled?:boolean }) => {
+const DeleteButton = (props: { onClick?: () => void, disabled?:boolean }) => {
   const { onClick, disabled } = props;
 
   return (

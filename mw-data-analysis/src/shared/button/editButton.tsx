@@ -1,7 +1,7 @@
 import Button from "@mui/material/Button";
 import { AiOutlineEdit } from "react-icons/ai";
 
-const EditButton = (props: { onClick: () => void }) => {
+const EditButton = (props: { onClick?: () => void }) => {
   const { onClick } = props;
   return (
     <>

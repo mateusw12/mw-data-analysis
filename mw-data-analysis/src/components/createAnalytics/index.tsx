@@ -12,9 +12,9 @@ import { useForm } from "antd/es/form/Form";
 import { useState } from "react";
 import { AiOutlineInbox } from "react-icons/ai";
 import { useNavigate } from "react-router";
-import SaveButton from "../../shared/button/saveButton";
 import "./style.css";
 import { read, utils } from "xlsx";
+import CreateButton from "../../shared/button/createButton";
 
 const CreateAnalytics = () => {
   const [form] = useForm();
@@ -46,8 +46,8 @@ const CreateAnalytics = () => {
     );
     sessionStorage.setItem("dataTable", JSON.stringify(data));
     setData([]);
-    navigate("/analytics/view");
     form.resetFields();
+    navigate("/analytics/view");
   };
 
   return (
@@ -72,7 +72,7 @@ const CreateAnalytics = () => {
           </Col>
           <Col offset={8} span={4}>
             <div className="align-button-save">
-              <SaveButton />
+              <CreateButton />
             </div>
           </Col>
         </Row>

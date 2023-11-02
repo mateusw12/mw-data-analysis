@@ -1,23 +1,23 @@
 import Button from "@mui/material/Button";
-import { AiOutlineClose } from "react-icons/ai";
+import { MdOutlineAdd } from "react-icons/md";
 
-const CancelButton = (props: { onClick?: () => void; disabled?: boolean }) => {
+const CreateButton = (props: { onClick?: () => void; disabled?: boolean }) => {
   const { onClick, disabled } = props;
 
   return (
     <>
       <Button
-        color="error"
-        startIcon={<AiOutlineClose />}
+        color="info"
+        startIcon={<MdOutlineAdd />}
         size="small"
         variant="contained"
         onClick={onClick}
         disabled={disabled}
       >
-        Cancelar
+        Adicionar
       </Button>
     </>
   );
 };
 
-export default CancelButton;
+export default CreateButton;
