@@ -28,9 +28,9 @@ const CreateAnalytics = () => {
     onChange(info) {
       const { status } = info.file;
       if (status === "done") {
-        message.success(`${info.file.name} file uploaded successfully.`);
+        message.success("O arquivo foi anexado com sucesso!");
       } else if (status === "error") {
-        message.error(`${info.file.name} file upload failed.`);
+        message.error("Erro ao anexar o arquivo, verifique células mescladas!");
       }
     },
   };
