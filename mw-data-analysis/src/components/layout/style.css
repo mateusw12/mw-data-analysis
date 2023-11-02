@@ -17,7 +17,7 @@
 
 .content {
     grid-area: content;
-    background-color: #eee;
+    background-color: #FFF;
     padding: 10px w0px;
     overflow: auto;
 }
@@ -122,7 +122,6 @@
 }
 
 .button-collapsed {
-
     background: #1677ff;
     display: flex;
     align-items: center;
