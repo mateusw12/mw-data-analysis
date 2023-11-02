@@ -26,6 +26,12 @@
     padding: 20px
 }
 
+.bread-crumb-align {
+    padding: 17px 15px;
+    font-weight: bold;
+    font-style: italic;
+}
+
 /* #004AAD */
 /* #5271FF */
 /* #0097B2 */
@@ -116,7 +122,7 @@
 }
 
 .button-collapsed {
-    
+
     background: #1677ff;
     display: flex;
     align-items: center;
