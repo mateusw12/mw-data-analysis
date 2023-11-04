@@ -23,11 +23,7 @@ const ViewAnalytics = () => {
 
     sessionStorage.setItem("dataTable", JSON.stringify(dataTableLocalStorage));
     sessionStorage.setItem("dataTableName", JSON.stringify(analyticsName));
-
     const dataTable = JSON.parse(sessionStorage.getItem("dataTable"));
-
-    console.log("dataTable", dataTable);
-
     if (!dataTable || dataTable.length <= 0) return;
 
     const dataToSend = extractDataTable(dataTable);

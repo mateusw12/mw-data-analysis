@@ -4,7 +4,7 @@
         "header header"
         "sidebar content";
     grid-template-columns: 200px 1fr;
-    grid-template-rows: 70px 1fr;
+    grid-template-rows: 50px 1fr;
     height: 100vh;
     overflow: hidden;
     transition: 0.3s;
@@ -53,9 +53,10 @@
 }
 
 .logo img {
-    width: 100px;
-    height: 100px;
-    padding-left: 40px;
+    width: 88px;
+    height: 81px;
+    padding-left: 65px;
+    padding-top: 7px;
 }
 
 .header-right {

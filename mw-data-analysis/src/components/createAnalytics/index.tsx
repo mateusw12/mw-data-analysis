@@ -37,7 +37,6 @@ const CreateAnalytics = () => {
   };
 
   const onFinish = (values: unknown) => {
-    if (!values) console.log("entrei", values);
     notification.success({
       message: "Análise criada com sucesso!",
     });

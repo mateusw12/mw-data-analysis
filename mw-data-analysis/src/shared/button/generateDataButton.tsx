@@ -11,6 +11,7 @@ const GenerateDataButton = (props: { onClick?: () => void; disabled?: boolean })
         startIcon={<BsTable />}
         size="small"
         variant="contained"
+        type="submit"
         onClick={onClick}
         disabled={disabled}
       >
