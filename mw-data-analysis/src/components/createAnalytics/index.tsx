@@ -14,13 +14,14 @@ import { AiOutlineInbox } from "react-icons/ai";
 import { useNavigate } from "react-router";
 import "./style.css";
 import { read, utils } from "xlsx";
-import CreateButton from "../../shared/button/createButton";
+import GenerateDataButton from "../../shared/button/generateDataButton";
 
 const CreateAnalytics = () => {
   const [form] = useForm();
   const navigate = useNavigate();
-
-  const [data, setData] = useState<unknown[]>([]);
+  const [data, setData] = useState([]);
+  const [dataHeader, setDataHeader] = useState([]);
+  const [isLoaded, setIsLoaded] = useState(false);
 
   const draggerProps: UploadProps = {
     name: "file",
@@ -40,12 +41,12 @@ const CreateAnalytics = () => {
     notification.success({
       message: "Análise criada com sucesso!",
     });
-    sessionStorage.setItem(
+    localStorage.setItem(
       "dataTableName",
       JSON.stringify(form.getFieldValue("analyticsName"))
     );
-    sessionStorage.setItem("dataTable", JSON.stringify(data));
-    setData([]);
+    localStorage.setItem("dataTable", JSON.stringify(data));
+    localStorage.setItem("dataTableHeader", JSON.stringify(dataHeader));
     form.resetFields();
     navigate("/analytics/view");
   };
@@ -72,7 +73,7 @@ const CreateAnalytics = () => {
           </Col>
           <Col offset={8} span={4}>
             <div className="align-button-save">
-              <CreateButton />
+              <GenerateDataButton disabled={isLoaded} />
             </div>
           </Col>
         </Row>
@@ -84,51 +85,80 @@ const CreateAnalytics = () => {
             >
               <Upload.Dragger
                 beforeUpload={(file) => {
-                  sessionStorage.removeItem("datatable");
-                  sessionStorage.removeItem("datatableName");
+                  localStorage.removeItem("dataToExport");
+                  localStorage.removeItem("iterationColumn");
+                  localStorage.removeItem("isAverageStandardDeviation");
+                  localStorage.removeItem("stdError");
+                  localStorage.removeItem("recalculate");
+                  localStorage.removeItem("fractionalRounds");
+                  localStorage.removeItem("responseColumn");
+
+                  setIsLoaded(true);
                   const reader = new FileReader();
                   reader.onload = (event) => {
-                    const wb = read(event.target!.result);
+                    const wb = read(event.target.result);
                     const sheets = wb.SheetNames;
+
+                    localStorage.removeItem("dataToExport");
+                    localStorage.removeItem("iterationColumn");
+                    localStorage.removeItem("isAverageStandardDeviation");
+                    localStorage.removeItem("stdError");
+                    localStorage.removeItem("recalculate");
+                    localStorage.removeItem("fractionalRounds");
+                    localStorage.removeItem("responseColumn");
 
                     if (sheets.length) {
                       if (!wb.Sheets[sheets[0]]["!merges"]) {
                         const rows = utils.sheet_to_json(wb.Sheets[sheets[0]]);
-                        const header = Object.keys(rows[0] as unknown[]);
+                        const header = Object.keys(rows[0]);
+                        setDataHeader(header);
                         setData(rows);
-                        sessionStorage.setItem("rows", String(rows.length));
-                        sessionStorage.setItem("header", String(header.length));
+                        localStorage.setItem("rows", String(rows.length));
+                        localStorage.setItem("header", String(header.length));
+                        localStorage.setItem(
+                          "dataToExportDefault",
+                          JSON.stringify(data)
+                        );
+
+                        setIsLoaded(false);
                       } else {
-                        if (wb.Sheets[sheets[0]]["!merges"]?.length === 1) {
+                        if (wb.Sheets[sheets[0]]["!merges"].length === 1) {
                           const mergedCellsStart =
-                            wb.Sheets[sheets[0]]["!merges"]![0].s;
+                            wb.Sheets[sheets[0]]["!merges"][0].s;
                           const mergedCellsEnd =
-                            wb.Sheets[sheets[0]]["!merges"]![0].e;
+                            wb.Sheets[sheets[0]]["!merges"][0].e;
                           if (
                             mergedCellsStart.c === 0 &&
                             mergedCellsStart.r === 0 &&
                             mergedCellsEnd.r === 0
                           ) {
                             const lastCell =
-                              wb.Sheets[sheets[0]]["!ref"]!.split(":")[1];
+                              wb.Sheets[sheets[0]]["!ref"].split(":")[1];
                             wb.Sheets[sheets[0]]["!ref"] =
                               "A" + mergedCellsEnd.c + ":" + lastCell;
                             const rows = utils.sheet_to_json(
                               wb.Sheets[sheets[0]]
                             );
 
+                            const header = Object.keys(rows[0]);
+                            setDataHeader(header);
                             setData(rows);
-                            sessionStorage.setItem("rows", String(rows.length));
+                            localStorage.setItem("rows", String(rows.length));
+                            localStorage.setItem(
+                              "header",
+                              String(header.length)
+                            );
+                            localStorage.setItem(
+                              "dataToExportDefault",
+                              JSON.stringify(data)
+                            );
                           } else {
-                            notification.error({
-                              message: "erro ao importar os dados",
-                            });
+                            setDataHeader([]);
                             setData([]);
+                            setIsLoaded(false);
                           }
                         } else {
-                          notification.error({
-                            message: "erro ao importar os dados",
-                          });
+                          setDataHeader([]);
                           setData([]);
                         }
                       }
