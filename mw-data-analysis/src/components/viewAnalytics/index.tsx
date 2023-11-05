@@ -1,9 +1,11 @@
-import { useEffect, useState } from "react";
-import "./style.css";
-import { Col, Row, Spin, Table } from "antd";
 import { TextField } from "@mui/material";
-import { extractDataTable } from "../../utils/extractDataTable";
+import { Spin, Table } from "antd";
 import { ColumnsType } from "antd/es/table";
+import { useEffect, useState } from "react";
+import SaveButton from "../../shared/button/saveButton";
+import { extractDataTable } from "../../utils/extractDataTable";
+import ContextMenu from "./contextMenu";
+import "./style.css";
 
 const ViewAnalytics = () => {
   const [data, setData] = useState({});
@@ -47,20 +49,22 @@ const ViewAnalytics = () => {
     return columns;
   };
 
-const createDataSource = () => {
-  const dataSource =
-    dataHeader.length > 0
-      ? data[dataHeader[0]].map((_, index) => {
-          const rowData = {};
-          dataHeader.forEach((header) => {
-            rowData[header] = data[header][index];
-          });
-          return { key: index, ...rowData };
-        })
-      : [];
+  const createDataSource = () => {
+    const dataSource =
+      dataHeader.length > 0
+        ? data[dataHeader[0]].map((_, index) => {
+            const rowData = {};
+            dataHeader.forEach((header) => {
+              rowData[header] = data[header][index];
+            });
+            return { key: index, ...rowData };
+          })
+        : [];
 
-  return dataSource;
-};
+    return dataSource;
+  };
+
+  const onSaveClick = () => {};
 
   return (
     <>
@@ -70,21 +74,21 @@ const createDataSource = () => {
         </>
       ) : (
         <>
-          <Row style={{ marginBottom: 25 }}>
-            <Col span={8}>
-              <TextField
-                id="analyticsName"
-                label="Nome da Análise"
-                disabled
-                value={dataTableName}
-                variant="standard"
-                fullWidth
-              />
-            </Col>
-          </Row>
+          <div className="align-header">
+            <TextField
+              id="analyticsName"
+              label="Nome da Análise"
+              disabled
+              value={dataTableName}
+              variant="standard"
+              style={{ width: 500 }}
+            />
 
-          <Row>
-            <Col span={24}>
+            <SaveButton onClick={onSaveClick} />
+          </div>
+
+          <ContextMenu>
+            <div>
               <Table
                 pagination={false}
                 bordered={true}
@@ -92,8 +96,8 @@ const createDataSource = () => {
                 dataSource={createDataSource()}
                 size="small"
               />
-            </Col>
-          </Row>
+            </div>
+          </ContextMenu>
         </>
       )}
     </>

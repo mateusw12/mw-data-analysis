@@ -36,13 +36,13 @@ const CreateAnalytics = () => {
     },
   };
 
-  const onFinish = (values: unknown) => {
+  const onFinish = (values: any) => {
     notification.success({
-      message: "Análise criada com sucesso!",
+      message: "Análise gerada com sucesso!",
     });
     localStorage.setItem(
       "dataTableName",
-      JSON.stringify(form.getFieldValue("analyticsName"))
+      JSON.stringify(values.analyticsName)
     );
     localStorage.setItem("dataTable", JSON.stringify(data));
     localStorage.setItem("dataTableHeader", JSON.stringify(dataHeader));
