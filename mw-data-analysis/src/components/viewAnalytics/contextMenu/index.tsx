@@ -83,7 +83,7 @@ const ContextMenu = (props: { children; selectMenuItem? }) => {
         },
         {
           label: "Customizado",
-          key: "customValue",
+          key: "customColor",
           icon: <MdOutlineSettings style={{ transform: "scale(1.5)" }} />,
         },
       ],

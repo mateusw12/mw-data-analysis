@@ -15,15 +15,19 @@ import { extractDataTable } from "../../utils/extractDataTable";
 import ContextMenu from "./contextMenu";
 import "./style.css";
 import React from "react";
+import CustomEffectColorModal from "./cutomColorEffectModal";
 
 const ViewAnalytics = () => {
   const [data, setData] = useState({});
   const [dataHeader, setDataHeader] = useState([]);
   const [dataTableName, setDataTableName] = useState("");
   const [loading, setLoading] = useState(false);
-  const [positiveAndNegativeColor, setPositiveAndNegativeColor] =
+  const [colorEffect, setColorEffect] = useState("");
+  const [isOpenCustomColorEffectModal, setIsOpenCustomColorEffectModal] =
     useState(false);
-  const [negativeColor, setNegativeColor] = useState(false);
+  const [customEffectMinValue, setCustomEffectMinValue] = useState(undefined);
+  const [customEffectMaxValue, setCustomEffectMaxValue] = useState(undefined);
+  const [customEffectColorValue, setCustomEffectColorValue] = useState("");
 
   useEffect(() => {
     setLoading(true);
@@ -51,23 +55,47 @@ const ViewAnalytics = () => {
   const handleSelectItem = (key: string) => {
     switch (key) {
       case "positiveAndNegative":
-        setNegativeColor(false);
-        setPositiveAndNegativeColor(true);
+        setColorEffect("positiveAndNegative");
         break;
-
       case "negative":
-        setPositiveAndNegativeColor(false);
-        setNegativeColor(true);
+        setColorEffect("negative");
         break;
-
+      case "positive":
+        setColorEffect("positive");
+        break;
+      case "customColor":
+        setIsOpenCustomColorEffectModal(true);
+        break;
       case "clearEffect":
-        setPositiveAndNegativeColor(false);
-        setNegativeColor(false);
+        setColorEffect("");
         break;
-
       default:
         break;
     }
+  };
+
+  const getCellClassName = (rowValue) => {
+    if (colorEffect === "customColor") return "";
+    if (colorEffect === "positiveAndNegative") {
+      return typeof rowValue === "number"
+        ? rowValue >= 0
+          ? "positive-cell"
+          : "negative-cell"
+        : "";
+    } else if (colorEffect === "negative") {
+      return typeof rowValue === "number"
+        ? rowValue < 0
+          ? "negative-cell"
+          : ""
+        : "";
+    } else if (colorEffect === "positive") {
+      return typeof rowValue === "number"
+        ? rowValue >= 0
+          ? "positive-cell"
+          : ""
+        : "";
+    }
+    return "";
   };
 
   const rows = () => {
@@ -82,6 +110,38 @@ const ViewAnalytics = () => {
           })
         : [];
     return dataSource;
+  };
+
+  const handleCustomEffectColorSave = (color, minValue, maxValue) => {
+    setCustomEffectMinValue(minValue);
+    setCustomEffectMaxValue(maxValue);
+    setCustomEffectColorValue(color);
+    setColorEffect("customColor");
+    setIsOpenCustomColorEffectModal(false);
+  };
+
+  useEffect(() => {
+    // empty useEffect
+  }, [customEffectColorValue, customEffectMaxValue, customEffectMinValue]);
+
+  const getCustomCellStyle = (rowValue) => {
+    console.log("customEffectColorValue", customEffectColorValue);
+    console.log("customEffectMaxValue", customEffectMaxValue);
+    console.log("customEffectMinValue", customEffectMinValue);
+    if (typeof rowValue === "number") {
+      if (customEffectMinValue && customEffectMaxValue) {
+        return rowValue >= customEffectMinValue &&
+          rowValue <= customEffectMaxValue
+          ? customEffectColorValue
+          : "";
+      } else if (customEffectMinValue && customEffectMaxValue == undefined) {
+        return rowValue <= customEffectMinValue ? customEffectColorValue : "";
+      } else if (!customEffectMinValue && customEffectMaxValue) {
+        return rowValue <= customEffectMaxValue ? "" : customEffectColorValue;
+      }
+    } else {
+      return "";
+    }
   };
 
   return (
@@ -101,7 +161,6 @@ const ViewAnalytics = () => {
               variant="standard"
               style={{ width: 500 }}
             />
-
             <SaveButton onClick={onSaveClick} />
           </div>
 
@@ -128,28 +187,23 @@ const ViewAnalytics = () => {
                     {rows().map((row, rowIndex) => (
                       <TableRow key={rowIndex}>
                         {dataHeader.map((column, columnIndex) => (
-                          <React.Fragment>
+                          <React.Fragment key={columnIndex}>
                             <TableCell
+                              style={{
+                                background:
+                                  colorEffect === "customColor"
+                                    ? getCustomCellStyle(row[column])
+                                    : "",
+                              }}
                               align={
                                 typeof row[column] == "number"
                                   ? "right"
                                   : "left"
                               }
-                              key={columnIndex}
                               className={
-                                positiveAndNegativeColor
-                                  ? typeof row[column] == "number"
-                                    ? row[column] !== null && row[column] >= 0
-                                      ? "positive-cell"
-                                      : "negative-cell"
-                                    : ""
-                                  : negativeColor
-                                  ? typeof row[column] == "number"
-                                    ? row[column] !== null && row[column] >= 0
-                                      ? ""
-                                      : "negative-cell"
-                                    : ""
-                                  : ""
+                                colorEffect === "customColor"
+                                  ? ""
+                                  : getCellClassName(row[column])
                               }
                             >
                               {row[column] !== null ? row[column] : ""}
@@ -164,6 +218,14 @@ const ViewAnalytics = () => {
             </div>
           </ContextMenu>
         </>
+      )}
+
+      {isOpenCustomColorEffectModal && (
+        <CustomEffectColorModal
+          isModalOpen={isOpenCustomColorEffectModal}
+          onModalClose={() => setIsOpenCustomColorEffectModal(false)}
+          onModalSaveClose={handleCustomEffectColorSave}
+        />
       )}
     </>
   );
