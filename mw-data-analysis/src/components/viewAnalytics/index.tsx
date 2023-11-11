@@ -100,7 +100,11 @@ const ViewAnalytics = () => {
           <ContextMenu selectMenuItem={handleSelectItem}>
             <div>
               <TableContainer component={Paper}>
-                <Table size="small" aria-label="a dense table">
+                <Table
+                  size="small"
+                  aria-label="a dense table"
+                  className="custom-table"
+                >
                   <TableHead
                     style={{
                       background: "#ededed",
@@ -118,6 +122,11 @@ const ViewAnalytics = () => {
                         {dataHeader.map((column, columnIndex) => (
                           <React.Fragment>
                             <TableCell
+                              align={
+                                typeof row[column] == "number"
+                                  ? "right"
+                                  : "left"
+                              }
                               key={columnIndex}
                               className={
                                 positiveAndNegativeColor

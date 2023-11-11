@@ -8,9 +8,19 @@
 
 .positive-cell {
     background: rgb(71, 195, 71);
-
 }
 
 .negative-cell {
     background: rgb(242, 73, 73);
+}
+
+.custom-table {
+    border-collapse: separate;
+    border-spacing: 0 8px;
+}
+
+.custom-table th,
+.custom-table td {
+    border: 1px solid #ddd;
+    padding: 8px;
 }
