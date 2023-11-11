@@ -23,6 +23,7 @@ const ViewAnalytics = () => {
   const [loading, setLoading] = useState(false);
   const [positiveAndNegativeColor, setPositiveAndNegativeColor] =
     useState(false);
+  const [negativeColor, setNegativeColor] = useState(false);
 
   useEffect(() => {
     setLoading(true);
@@ -50,11 +51,18 @@ const ViewAnalytics = () => {
   const handleSelectItem = (key: string) => {
     switch (key) {
       case "positiveAndNegative":
+        setNegativeColor(false);
         setPositiveAndNegativeColor(true);
+        break;
+
+      case "negative":
+        setPositiveAndNegativeColor(false);
+        setNegativeColor(true);
         break;
 
       case "clearEffect":
         setPositiveAndNegativeColor(false);
+        setNegativeColor(false);
         break;
 
       default:
@@ -133,6 +141,12 @@ const ViewAnalytics = () => {
                                   ? typeof row[column] == "number"
                                     ? row[column] !== null && row[column] >= 0
                                       ? "positive-cell"
+                                      : "negative-cell"
+                                    : ""
+                                  : negativeColor
+                                  ? typeof row[column] == "number"
+                                    ? row[column] !== null && row[column] >= 0
+                                      ? ""
                                       : "negative-cell"
                                     : ""
                                   : ""
