@@ -30,6 +30,7 @@ const ContextMenu = (props: { children; selectMenuItem? }) => {
       label: "Colunas",
       key: "column",
       icon: <BsTable style={{ transform: "scale(1.5)" }} />,
+      disabled: true,
       children: [
         {
           label: "Adicionar",
@@ -52,11 +53,13 @@ const ContextMenu = (props: { children; selectMenuItem? }) => {
       label: "Colorir Faixa de Atingimento",
       key: "colorRange",
       icon: <BsCalendar4Range style={{ transform: "scale(1.5)" }} />,
+      disabled: true,
     },
     {
       label: "Colorir Evolução",
       key: "colorEvolution",
       icon: <GiProgression style={{ transform: "scale(1.5)" }} />,
+      disabled: true,
     },
     {
       label: "Destacar por valor",
@@ -89,16 +92,19 @@ const ContextMenu = (props: { children; selectMenuItem? }) => {
       label: "Destacar por relevância",
       key: "highlightRelevance",
       icon: <AiOutlineImport style={{ transform: "scale(1.5)" }} />,
+      disabled: true,
     },
     {
       label: "Filtros",
       key: "filter",
       icon: <AiOutlineFilter style={{ transform: "scale(1.5)" }} />,
+      disabled: true,
     },
     {
       label: "Fórmula",
       key: "formula",
       icon: <BsCalculator style={{ transform: "scale(1.5)" }} />,
+      disabled: true,
     },
     {
       label: "Limpar Efeitos",
@@ -109,6 +115,7 @@ const ContextMenu = (props: { children; selectMenuItem? }) => {
       label: "Limpar Fórmula",
       key: "clearFormula",
       icon: <MdOutlineClear style={{ transform: "scale(1.5)" }} />,
+      disabled: true,
     },
   ];
 

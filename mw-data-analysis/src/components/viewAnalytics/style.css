@@ -5,3 +5,12 @@
     gap: 10px;
     padding-bottom: 10px;
 }
+
+.positive-cell {
+    background: rgb(71, 195, 71);
+
+}
+
+.negative-cell {
+    background: rgb(242, 73, 73);
+}
