@@ -92,7 +92,36 @@ const ContextMenu = (props: { children; selectMenuItem? }) => {
       label: "Destacar por relevância",
       key: "highlightRelevance",
       icon: <AiOutlineImport style={{ transform: "scale(1.5)" }} />,
-      disabled: true,
+      children: [
+        {
+          label: "Verde",
+          key: "highlightRelevanceGreen",
+        },
+        {
+          label: "Azul",
+          key: "highlightRelevanceBlue",
+        },
+        {
+          label: "Laranja",
+          key: "highlightRelevanceOrange",
+        },
+        {
+          label: "Vermelho",
+          key: "highlightRelevanceRed",
+        },
+        {
+          label: "Laranja até Verde",
+          key: "highlightRelevanceGreenOrange",
+        },
+        {
+          label: "Vermelho até Verde",
+          key: "highlightRelevanceRedGreen",
+        },
+        {
+          label: "Vermelho até Azul",
+          key: "highlightRelevanceRedBlue",
+        },
+      ],
     },
     {
       label: "Filtros",

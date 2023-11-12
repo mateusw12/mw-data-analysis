@@ -16,18 +16,22 @@ import ContextMenu from "./contextMenu";
 import "./style.css";
 import React from "react";
 import CustomEffectColorModal from "./cutomColorEffectModal";
+import { getColorScale, getRelevanceColor } from "../../utils/colorUtil";
 
 const ViewAnalytics = () => {
   const [data, setData] = useState({});
   const [dataHeader, setDataHeader] = useState([]);
   const [dataTableName, setDataTableName] = useState("");
   const [loading, setLoading] = useState(false);
-  const [colorEffect, setColorEffect] = useState("");
+  const [colorEffect, setColorEffect] = useState(null);
+  const [relevanceColor, setRelevanceColor] = useState([]);
   const [isOpenCustomColorEffectModal, setIsOpenCustomColorEffectModal] =
     useState(false);
   const [customEffectMinValue, setCustomEffectMinValue] = useState(undefined);
   const [customEffectMaxValue, setCustomEffectMaxValue] = useState(undefined);
   const [customEffectColorValue, setCustomEffectColorValue] = useState("");
+  const [minColumnValue, setMinColumnValue] = useState(null);
+  const [maxColumnValue, setMaxColumnValue] = useState(null);
 
   useEffect(() => {
     setLoading(true);
@@ -47,6 +51,10 @@ const ViewAnalytics = () => {
     const dataToSend = extractDataTable(dataTable);
     setDataHeader(dataToSend.itens);
     setData(dataToSend.obj);
+
+    const minMaxValues = getMinMaxValues(dataToSend.itens, dataToSend.obj);
+    setMinColumnValue(minMaxValues.min);
+    setMaxColumnValue(minMaxValues.max);
     setLoading(false);
   }, []);
 
@@ -66,10 +74,31 @@ const ViewAnalytics = () => {
       case "customColor":
         setIsOpenCustomColorEffectModal(true);
         break;
-      case "clearEffect":
-        setColorEffect("");
+      case "highlightRelevanceGreen":
+        setRelevanceColor(getRelevanceColor["highlightRelevanceGreen"]);
         break;
-      default:
+      case "highlightRelevanceBlue":
+        setRelevanceColor(getRelevanceColor["highlightRelevanceBlue"]);
+        break;
+      case "highlightRelevanceOrange":
+        setRelevanceColor(getRelevanceColor["highlightRelevanceOrange"]);
+        break;
+      case "highlightRelevanceRed":
+        setRelevanceColor(getRelevanceColor["highlightRelevanceRed"]);
+        break;
+      case "highlightRelevanceGreenOrange":
+        setRelevanceColor(getRelevanceColor["highlightRelevanceGreenOrange"]);
+        break;
+      case "highlightRelevanceRedGreen":
+        setRelevanceColor(getRelevanceColor["highlightRelevanceRedGreen"]);
+        break;
+      case "highlightRelevanceRedBlue":
+        setRelevanceColor(getRelevanceColor["highlightRelevanceRedBlue"]);
+        break;
+
+      case "clearEffect":
+        setColorEffect(null);
+        setRelevanceColor([]);
         break;
     }
   };
@@ -125,9 +154,6 @@ const ViewAnalytics = () => {
   }, [customEffectColorValue, customEffectMaxValue, customEffectMinValue]);
 
   const getCustomCellStyle = (rowValue) => {
-    console.log("customEffectColorValue", customEffectColorValue);
-    console.log("customEffectMaxValue", customEffectMaxValue);
-    console.log("customEffectMinValue", customEffectMinValue);
     if (typeof rowValue === "number") {
       if (customEffectMinValue && customEffectMaxValue) {
         return rowValue >= customEffectMinValue &&
@@ -142,6 +168,22 @@ const ViewAnalytics = () => {
     } else {
       return "";
     }
+  };
+
+  const getMinMaxValues = (headers, data) => {
+    let min = Infinity;
+    let max = -Infinity;
+
+    headers.forEach((header) => {
+      data[header].forEach((value) => {
+        if (typeof value === "number") {
+          min = Math.min(min, value);
+          max = Math.max(max, value);
+        }
+      });
+    });
+
+    return { min, max };
   };
 
   return (
@@ -191,7 +233,15 @@ const ViewAnalytics = () => {
                             <TableCell
                               style={{
                                 background:
-                                  colorEffect === "customColor"
+                                  relevanceColor.length > 0
+                                    ? getColorScale(
+                                        row[column],
+                                        minColumnValue,
+                                        maxColumnValue,
+                                        relevanceColor
+                                      )
+                                    : colorEffect &&
+                                      colorEffect === "customColor"
                                     ? getCustomCellStyle(row[column])
                                     : "",
                               }}
@@ -201,7 +251,7 @@ const ViewAnalytics = () => {
                                   : "left"
                               }
                               className={
-                                colorEffect === "customColor"
+                                colorEffect && colorEffect === "customColor"
                                   ? ""
                                   : getCellClassName(row[column])
                               }
