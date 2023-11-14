@@ -6,9 +6,8 @@ import {
   SelectChangeEvent,
   TextField,
 } from "@mui/material";
-import { Col, Modal, Row } from "antd";
+import { Col, Modal, Row, ColorPicker } from "antd";
 import { useState } from "react";
-import { ColorPicker } from "antd";
 
 const CustomEffectColorModal = (props: {
   isModalOpen: boolean;

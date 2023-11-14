@@ -1,3 +1,4 @@
+import React, { useEffect, useState } from "react";
 import {
   Paper,
   Table,
@@ -9,14 +10,14 @@ import {
   TextField,
 } from "@mui/material";
 import { Spin } from "antd";
-import { useEffect, useState } from "react";
 import SaveButton from "../../shared/button/saveButton";
-import { extractDataTable } from "../../utils/extractDataTable";
-import ContextMenu from "./contextMenu";
-import "./style.css";
-import React from "react";
-import CustomEffectColorModal from "./cutomColorEffectModal";
 import { getColorScale, getRelevanceColor } from "../../utils/colorUtil";
+import { extractDataTable } from "../../utils/extractDataTable";
+import AchievementColorModal from "./achievementColorModal";
+import ContextMenu from "./contextMenu";
+import CustomEffectColorModal from "./cutomColorEffectModal";
+import { AchivementColor, AchivementValue } from "./interface";
+import "./style.css";
 
 const ViewAnalytics = () => {
   const [data, setData] = useState({});
@@ -25,7 +26,14 @@ const ViewAnalytics = () => {
   const [loading, setLoading] = useState(false);
   const [colorEffect, setColorEffect] = useState(null);
   const [relevanceColor, setRelevanceColor] = useState([]);
+  const [achievementColor, setAchievementColor] =
+    useState<AchivementColor>(null);
+  const [achievementValue, setAchievementValue] =
+    useState<AchivementValue>(null);
+  const [isAchievement, setIsAchievement] = useState(false);
   const [isOpenCustomColorEffectModal, setIsOpenCustomColorEffectModal] =
+    useState(false);
+  const [isOpenAchievementColorModal, setIsOpenAchievementColorModal] =
     useState(false);
   const [customEffectMinValue, setCustomEffectMinValue] = useState(undefined);
   const [customEffectMaxValue, setCustomEffectMaxValue] = useState(undefined);
@@ -61,6 +69,7 @@ const ViewAnalytics = () => {
   const onSaveClick = () => {};
 
   const handleSelectItem = (key: string) => {
+    setIsAchievement(false);
     switch (key) {
       case "positiveAndNegative":
         setColorEffect("positiveAndNegative");
@@ -73,6 +82,9 @@ const ViewAnalytics = () => {
         break;
       case "customColor":
         setIsOpenCustomColorEffectModal(true);
+        break;
+      case "colorAchievement":
+        setIsOpenAchievementColorModal(true);
         break;
       case "highlightRelevanceGreen":
         setRelevanceColor(getRelevanceColor["highlightRelevanceGreen"]);
@@ -98,6 +110,8 @@ const ViewAnalytics = () => {
 
       case "clearEffect":
         setColorEffect(null);
+        setIsAchievement(false);
+        setAchievementColor(null);
         setRelevanceColor([]);
         break;
     }
@@ -149,9 +163,47 @@ const ViewAnalytics = () => {
     setIsOpenCustomColorEffectModal(false);
   };
 
+  const handleAchievementColorSave = (
+    veryBadColorValue,
+    badColorValue,
+    goodColorValue,
+    greatColorValue,
+    excelentColorValue,
+    badValue,
+    veryBadValue,
+    goodValue,
+    greatValue,
+    excelentValuee
+  ) => {
+    setAchievementColor({
+      veryBad: veryBadColorValue ? veryBadColorValue : 0,
+      bad: badColorValue ? badColorValue : 0,
+      good: goodColorValue ? goodColorValue : 0,
+      great: greatColorValue ? greatColorValue : 0,
+      excelent: excelentColorValue ? excelentColorValue : 0,
+    });
+
+    setAchievementValue({
+      bad: badValue,
+      veryBad: veryBadValue,
+      good: goodValue,
+      great: greatValue,
+      excelent: excelentValuee,
+    });
+    setIsAchievement(true);
+    setIsOpenAchievementColorModal(false);
+  };
+
   useEffect(() => {
     // empty useEffect
-  }, [customEffectColorValue, customEffectMaxValue, customEffectMinValue]);
+  }, [
+    customEffectColorValue,
+    customEffectMaxValue,
+    customEffectMinValue,
+    isAchievement,
+    achievementColor,
+    achievementValue,
+  ]);
 
   const getCustomCellStyle = (rowValue) => {
     if (typeof rowValue === "number") {
@@ -184,6 +236,32 @@ const ViewAnalytics = () => {
     });
 
     return { min, max };
+  };
+
+  const getAchievementCellStyle = (rowValue) => {
+    if (typeof rowValue === "number") {
+      const range = maxColumnValue - minColumnValue;
+      const normalizedValue =
+        range !== 0 ? (rowValue - minColumnValue) / range : 0;
+      const percentage = normalizedValue * 100;
+
+      if (percentage <= Number(achievementValue.veryBad)) {
+        return achievementColor.veryBad;
+      }
+      if (percentage <= Number(achievementValue.bad)) {
+        return achievementColor.bad;
+      }
+      if (percentage <= Number(achievementValue.good)) {
+        return achievementColor.good;
+      }
+      if (percentage <= Number(achievementValue.great)) {
+        return achievementColor.great;
+      }
+      if (percentage <= Number(achievementValue.excelent)) {
+        return achievementColor.excelent;
+      }
+    }
+    return "";
   };
 
   return (
@@ -232,18 +310,18 @@ const ViewAnalytics = () => {
                           <React.Fragment key={columnIndex}>
                             <TableCell
                               style={{
-                                background:
-                                  relevanceColor.length > 0
-                                    ? getColorScale(
-                                        row[column],
-                                        minColumnValue,
-                                        maxColumnValue,
-                                        relevanceColor
-                                      )
-                                    : colorEffect &&
-                                      colorEffect === "customColor"
-                                    ? getCustomCellStyle(row[column])
-                                    : "",
+                                background: isAchievement
+                                  ? getAchievementCellStyle(row[column])
+                                  : relevanceColor.length > 0
+                                  ? getColorScale(
+                                      row[column],
+                                      minColumnValue,
+                                      maxColumnValue,
+                                      relevanceColor
+                                    )
+                                  : colorEffect && colorEffect === "customColor"
+                                  ? getCustomCellStyle(row[column])
+                                  : "",
                               }}
                               align={
                                 typeof row[column] == "number"
@@ -275,6 +353,14 @@ const ViewAnalytics = () => {
           isModalOpen={isOpenCustomColorEffectModal}
           onModalClose={() => setIsOpenCustomColorEffectModal(false)}
           onModalSaveClose={handleCustomEffectColorSave}
+        />
+      )}
+
+      {isOpenAchievementColorModal && (
+        <AchievementColorModal
+          isModalOpen={isOpenAchievementColorModal}
+          onModalClose={() => setIsOpenAchievementColorModal(false)}
+          onModalSaveClose={handleAchievementColorSave}
         />
       )}
     </>

@@ -51,9 +51,8 @@ const ContextMenu = (props: { children; selectMenuItem? }) => {
     },
     {
       label: "Colorir Faixa de Atingimento",
-      key: "colorRange",
+      key: "colorAchievement",
       icon: <BsCalendar4Range style={{ transform: "scale(1.5)" }} />,
-      disabled: true,
     },
     {
       label: "Colorir Evolução",
