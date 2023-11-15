@@ -23,6 +23,7 @@ import ContextMenu from "./contextMenu";
 import CustomEffectColorModal from "./cutomColorEffectModal";
 import { AchivementColor, AchivementValue } from "./interface";
 import "./style.css";
+import GenerateChartButton from "../../shared/button/generateChart";
 
 const ViewAnalytics = () => {
   type Order = "asc" | "desc";
@@ -336,7 +337,10 @@ const ViewAnalytics = () => {
               variant="standard"
               style={{ width: 500 }}
             />
-            <SaveButton onClick={onSaveClick} />
+            <div className="align-button">
+              <GenerateChartButton disabled={true} onClick={onSaveClick} />
+              <SaveButton onClick={onSaveClick} />
+            </div>
           </div>
 
           <ContextMenu selectMenuItem={handleSelectItem}>
@@ -368,9 +372,7 @@ const ViewAnalytics = () => {
                   </TableHead>
                   <TableBody>
                     {sortedRows().map((row, rowIndex) => (
-                      <TableRow
-                        key={rowIndex}
-                      >
+                      <TableRow key={rowIndex}>
                         {dataHeader.map((column, columnIndex) => (
                           <React.Fragment key={columnIndex}>
                             <TableCell

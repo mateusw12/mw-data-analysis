@@ -6,6 +6,14 @@
     padding-bottom: 10px;
 }
 
+.align-button {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 10px;
+    padding-bottom: 10px;
+}
+
 .positive-cell {
     background: rgb(71, 195, 71);
 }
