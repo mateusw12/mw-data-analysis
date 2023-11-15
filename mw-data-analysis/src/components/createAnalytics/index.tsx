@@ -1,5 +1,6 @@
 import { TextField } from "@mui/material";
 import {
+  Button,
   Col,
   Form,
   Row,
@@ -10,11 +11,11 @@ import {
 } from "antd";
 import { useForm } from "antd/es/form/Form";
 import { useState } from "react";
-import { AiOutlineInbox } from "react-icons/ai";
 import { useNavigate } from "react-router";
 import "./style.css";
 import { read, utils } from "xlsx";
 import GenerateDataButton from "../../shared/button/generateDataButton";
+import { AiOutlineUpload } from "react-icons/ai";
 
 const CreateAnalytics = () => {
   const [form] = useForm();
@@ -36,14 +37,11 @@ const CreateAnalytics = () => {
     },
   };
 
-  const onFinish = (values: any) => {
+  const onFinish = (values) => {
     notification.success({
       message: "Análise gerada com sucesso!",
     });
-    localStorage.setItem(
-      "dataTableName",
-      JSON.stringify(values.analyticsName)
-    );
+    localStorage.setItem("dataTableName", JSON.stringify(values.analyticsName));
     localStorage.setItem("dataTable", JSON.stringify(data));
     localStorage.setItem("dataTableHeader", JSON.stringify(dataHeader));
     form.resetFields();
@@ -53,8 +51,8 @@ const CreateAnalytics = () => {
   return (
     <>
       <Form form={form} name="form" autoComplete="off" onFinish={onFinish}>
-        <Row>
-          <Col span={12}>
+        <Row align={"middle"}>
+          <Col span={10}>
             <Form.Item
               name="analyticsName"
               rules={[{ required: true, message: "Obrigatório" }]}
@@ -70,19 +68,12 @@ const CreateAnalytics = () => {
               />
             </Form.Item>
           </Col>
-          <Col offset={8} span={4}>
-            <div className="align-button-save">
-              <GenerateDataButton disabled={isLoaded} />
-            </div>
-          </Col>
-        </Row>
-        <Row>
-          <Col span={24}>
+          <Col offset={1} span={4}>
             <Form.Item
               name="attachment"
               rules={[{ required: true, message: "Obrigatório" }]}
             >
-              <Upload.Dragger
+              <Upload
                 beforeUpload={(file) => {
                   localStorage.removeItem("dataToExport");
                   localStorage.removeItem("iterationColumn");
@@ -166,19 +157,15 @@ const CreateAnalytics = () => {
                   reader.readAsArrayBuffer(file);
                   return false;
                 }}
-                style={{ minHeight: "calc(100vh - 280px)" }}
                 {...draggerProps}
               >
-                <p className="ant-upload-drag-icon">
-                  <AiOutlineInbox style={{ transform: "scale(4.0)" }} />
-                </p>
-                <p className="ant-upload-text">
-                  Clique ou arraste para anexar o arquivo!
-                </p>
-                <p className="ant-upload-hint">
-                  Extensões suportadas: .csv, .xlsx, .xls, .xlsm, .xlsb, .xltx
-                </p>
-              </Upload.Dragger>
+                <Button icon={<AiOutlineUpload />}>Click to Upload</Button>
+              </Upload>
+            </Form.Item>
+          </Col>
+          <Col offset={6} span={3}>
+            <Form.Item>
+              <GenerateDataButton disabled={isLoaded} />
             </Form.Item>
           </Col>
         </Row>
