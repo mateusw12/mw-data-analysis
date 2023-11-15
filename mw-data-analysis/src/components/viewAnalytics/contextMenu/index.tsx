@@ -58,7 +58,6 @@ const ContextMenu = (props: { children; selectMenuItem? }) => {
       label: "Colorir Evolução",
       key: "colorEvolution",
       icon: <GiProgression style={{ transform: "scale(1.5)" }} />,
-      disabled: true,
     },
     {
       label: "Destacar por valor",

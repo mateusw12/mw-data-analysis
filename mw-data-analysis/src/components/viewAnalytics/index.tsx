@@ -11,7 +11,11 @@ import {
 } from "@mui/material";
 import { Spin } from "antd";
 import SaveButton from "../../shared/button/saveButton";
-import { getColorScale, getRelevanceColor } from "../../utils/colorUtil";
+import {
+  getColorScale,
+  getEvolutionColor,
+  getRelevanceColor,
+} from "../../utils/colorUtil";
 import { extractDataTable } from "../../utils/extractDataTable";
 import AchievementColorModal from "./achievementColorModal";
 import ContextMenu from "./contextMenu";
@@ -31,6 +35,7 @@ const ViewAnalytics = () => {
   const [achievementValue, setAchievementValue] =
     useState<AchivementValue>(null);
   const [isAchievement, setIsAchievement] = useState(false);
+  const [isColorEvolution, setIsColorEvolution] = useState(false);
   const [isOpenCustomColorEffectModal, setIsOpenCustomColorEffectModal] =
     useState(false);
   const [isOpenAchievementColorModal, setIsOpenAchievementColorModal] =
@@ -70,6 +75,8 @@ const ViewAnalytics = () => {
 
   const handleSelectItem = (key: string) => {
     setIsAchievement(false);
+    setIsColorEvolution(false);
+
     switch (key) {
       case "positiveAndNegative":
         setColorEffect("positiveAndNegative");
@@ -107,8 +114,11 @@ const ViewAnalytics = () => {
       case "highlightRelevanceRedBlue":
         setRelevanceColor(getRelevanceColor["highlightRelevanceRedBlue"]);
         break;
-
+      case "colorEvolution":
+        setIsColorEvolution(true);
+        break;
       case "clearEffect":
+        setIsColorEvolution(false);
         setColorEffect(null);
         setIsAchievement(false);
         setAchievementColor(null);
@@ -203,19 +213,20 @@ const ViewAnalytics = () => {
     isAchievement,
     achievementColor,
     achievementValue,
+    isColorEvolution,
   ]);
 
-  const getCustomCellStyle = (rowValue) => {
-    if (typeof rowValue === "number") {
+  const getCustomCellStyle = (cellValue) => {
+    if (typeof cellValue === "number") {
       if (customEffectMinValue && customEffectMaxValue) {
-        return rowValue >= customEffectMinValue &&
-          rowValue <= customEffectMaxValue
+        return cellValue >= customEffectMinValue &&
+          cellValue <= customEffectMaxValue
           ? customEffectColorValue
           : "";
       } else if (customEffectMinValue && customEffectMaxValue == undefined) {
-        return rowValue <= customEffectMinValue ? customEffectColorValue : "";
+        return cellValue <= customEffectMinValue ? customEffectColorValue : "";
       } else if (!customEffectMinValue && customEffectMaxValue) {
-        return rowValue <= customEffectMaxValue ? "" : customEffectColorValue;
+        return cellValue <= customEffectMaxValue ? "" : customEffectColorValue;
       }
     } else {
       return "";
@@ -238,11 +249,11 @@ const ViewAnalytics = () => {
     return { min, max };
   };
 
-  const getAchievementCellStyle = (rowValue) => {
-    if (typeof rowValue === "number") {
+  const getAchievementCellStyle = (cellValue) => {
+    if (typeof cellValue === "number") {
       const range = maxColumnValue - minColumnValue;
       const normalizedValue =
-        range !== 0 ? (rowValue - minColumnValue) / range : 0;
+        range !== 0 ? (cellValue - minColumnValue) / range : 0;
       const percentage = normalizedValue * 100;
 
       if (percentage <= Number(achievementValue.veryBad)) {
@@ -262,6 +273,14 @@ const ViewAnalytics = () => {
       }
     }
     return "";
+  };
+
+  const getColorEvolutionCellStyle = (cellValue, rowValues) => {
+    if (typeof cellValue !== "number" || !rowValues || rowValues.length === 0) {
+      return "";
+    }
+
+    return getEvolutionColor(cellValue, rowValues);
   };
 
   return (
@@ -310,7 +329,12 @@ const ViewAnalytics = () => {
                           <React.Fragment key={columnIndex}>
                             <TableCell
                               style={{
-                                background: isAchievement
+                                background: isColorEvolution
+                                  ? getColorEvolutionCellStyle(
+                                      row[column],
+                                      Object.values(row)
+                                    )
+                                  : isAchievement
                                   ? getAchievementCellStyle(row[column])
                                   : relevanceColor.length > 0
                                   ? getColorScale(

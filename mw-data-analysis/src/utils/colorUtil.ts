@@ -47,6 +47,37 @@ const getColorScaleFromTo = (
   return chroma.hsl(hue, 1, 0.6).hex();
 };
 
+export const getEvolutionColor = (cellValue, rowValues: unknown[]) => {
+  const colors = ["#FF7575", "#FFFFA5", "#A5FFA5"];
+
+  for (let i = 0; i < rowValues.length; i++) {
+    const currentValue = rowValues[i];
+    const nextValue = i < rowValues.length - 1 ? rowValues[i + 1] : null;
+
+    if (typeof currentValue === "number") {
+      if (nextValue !== null) {
+        if (cellValue < nextValue) {
+          return colors[0]; // vermelho
+        } else if (cellValue > nextValue) {
+          return colors[2]; // verde
+        } else {
+          return colors[1]; // amarelo
+        }
+      } else if (i > 0) {
+        // Se for a última célula e houver uma célula anterior, compara com a anterior
+        const previousValue = rowValues[i - 1];
+        if (cellValue < previousValue) {
+          return colors[0]; // vermelho
+        } else if (cellValue > previousValue) {
+          return colors[2]; // verde
+        } else {
+          return colors[1]; // amarelo
+        }
+      }
+    }
+  }
+  return "";
+};
 
 export const getRelevanceColor: { [key: string]: string[] } = {
   highlightRelevanceGreen: ["#40bf80"],
