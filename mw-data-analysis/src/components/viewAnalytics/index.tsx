@@ -7,6 +7,7 @@ import {
   TableContainer,
   TableHead,
   TableRow,
+  TableSortLabel,
   TextField,
 } from "@mui/material";
 import { Spin } from "antd";
@@ -24,6 +25,8 @@ import { AchivementColor, AchivementValue } from "./interface";
 import "./style.css";
 
 const ViewAnalytics = () => {
+  type Order = "asc" | "desc";
+
   const [data, setData] = useState({});
   const [dataHeader, setDataHeader] = useState([]);
   const [dataTableName, setDataTableName] = useState("");
@@ -45,6 +48,8 @@ const ViewAnalytics = () => {
   const [customEffectColorValue, setCustomEffectColorValue] = useState("");
   const [minColumnValue, setMinColumnValue] = useState(null);
   const [maxColumnValue, setMaxColumnValue] = useState(null);
+  const [orderBy, setOrderBy] = useState(null);
+  const [order, setOrder] = useState<Order>("asc");
 
   useEffect(() => {
     setLoading(true);
@@ -72,6 +77,49 @@ const ViewAnalytics = () => {
   }, []);
 
   const onSaveClick = () => {};
+
+  const handleSort = (column) => {
+    const isAsc = orderBy === column && order === "asc";
+    setOrder(isAsc ? "desc" : "asc");
+    setOrderBy(column);
+  };
+
+  const sortedRows = () => {
+    const dataSource =
+      dataHeader.length > 0
+        ? data[dataHeader[0]].map((_, rowIndex) => {
+            const rowData = {};
+            dataHeader.forEach((column) => {
+              rowData[column] = data[column] ? data[column][rowIndex] : null;
+            });
+            return rowData;
+          })
+        : [];
+
+    const comparator = (a, b) => {
+      const valueA = a[orderBy];
+      const valueB = b[orderBy];
+
+      if (valueA === null || valueA === undefined) return -1;
+      if (valueB === null || valueB === undefined) return 1;
+
+      if (typeof valueA === "number" && typeof valueB === "number") {
+        return order === "asc" ? valueA - valueB : valueB - valueA;
+      } else if (typeof valueA === "string" && typeof valueB === "string") {
+        return order === "asc"
+          ? valueA.localeCompare(valueB)
+          : valueB.localeCompare(valueA);
+      } else if (valueA instanceof Date && valueB instanceof Date) {
+        return order === "asc"
+          ? valueA.getTime() - valueB.getTime()
+          : valueB.getTime() - valueA.getTime();
+      } else {
+        return 0;
+      }
+    };
+
+    return dataSource.sort(comparator);
+  };
 
   const handleSelectItem = (key: string) => {
     setIsAchievement(false);
@@ -151,20 +199,6 @@ const ViewAnalytics = () => {
     return "";
   };
 
-  const rows = () => {
-    const dataSource =
-      dataHeader.length > 0
-        ? data[dataHeader[0]].map((_, rowIndex) => {
-            const rowData = {};
-            dataHeader.forEach((column) => {
-              rowData[column] = data[column] ? data[column][rowIndex] : null;
-            });
-            return rowData;
-          })
-        : [];
-    return dataSource;
-  };
-
   const handleCustomEffectColorSave = (color, minValue, maxValue) => {
     setCustomEffectMinValue(minValue);
     setCustomEffectMaxValue(maxValue);
@@ -214,6 +248,8 @@ const ViewAnalytics = () => {
     achievementColor,
     achievementValue,
     isColorEvolution,
+    orderBy,
+    order,
   ]);
 
   const getCustomCellStyle = (cellValue) => {
@@ -318,13 +354,23 @@ const ViewAnalytics = () => {
                   >
                     <TableRow>
                       {dataHeader.map((column, index) => (
-                        <TableCell key={index}>{column}</TableCell>
+                        <TableCell key={index}>
+                          <TableSortLabel
+                            active={orderBy === column}
+                            direction={orderBy === column ? order : "asc"}
+                            onClick={() => handleSort(column)}
+                          >
+                            {column}
+                          </TableSortLabel>
+                        </TableCell>
                       ))}
                     </TableRow>
                   </TableHead>
                   <TableBody>
-                    {rows().map((row, rowIndex) => (
-                      <TableRow key={rowIndex}>
+                    {sortedRows().map((row, rowIndex) => (
+                      <TableRow
+                        key={rowIndex}
+                      >
                         {dataHeader.map((column, columnIndex) => (
                           <React.Fragment key={columnIndex}>
                             <TableCell
