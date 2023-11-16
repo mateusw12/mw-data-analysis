@@ -24,12 +24,15 @@ import CustomEffectColorModal from "./cutomColorEffectModal";
 import { AchivementColor, AchivementValue } from "./interface";
 import "./style.css";
 import GenerateChartButton from "../../shared/button/generateChart";
+import HideColumnModal from "./hideColumnModal";
 
 const ViewAnalytics = () => {
   type Order = "asc" | "desc";
 
   const [data, setData] = useState({});
   const [dataHeader, setDataHeader] = useState([]);
+  const [hideColumnsModal, setHideColumnsModal] = useState([]);
+  const [hideColumns, setHideColumns] = useState([]);
   const [dataTableName, setDataTableName] = useState("");
   const [loading, setLoading] = useState(false);
   const [colorEffect, setColorEffect] = useState(null);
@@ -49,6 +52,8 @@ const ViewAnalytics = () => {
   const [customEffectColorValue, setCustomEffectColorValue] = useState("");
   const [minColumnValue, setMinColumnValue] = useState(null);
   const [maxColumnValue, setMaxColumnValue] = useState(null);
+  const [isOpenHideColumnModal, setIsOpenHideColumnModal] = useState(false);
+
   const [orderBy, setOrderBy] = useState(null);
   const [order, setOrder] = useState<Order>("asc");
 
@@ -166,6 +171,9 @@ const ViewAnalytics = () => {
       case "colorEvolution":
         setIsColorEvolution(true);
         break;
+      case "hideColumn":
+        setIsOpenHideColumnModal(true);
+        break;
       case "clearEffect":
         setIsColorEvolution(false);
         setColorEffect(null);
@@ -251,6 +259,7 @@ const ViewAnalytics = () => {
     isColorEvolution,
     orderBy,
     order,
+    hideColumns,
   ]);
 
   const getCustomCellStyle = (cellValue) => {
@@ -320,6 +329,13 @@ const ViewAnalytics = () => {
     return getEvolutionColor(cellValue, rowValues);
   };
 
+  const handleHideColumns = (hideColumns: string[]) => {
+    const newColumns = dataHeader.filter((el) => !hideColumns.includes(el));
+    setHideColumnsModal(hideColumns);
+    setHideColumns(newColumns);
+    setIsOpenHideColumnModal(false);
+  };
+
   return (
     <>
       {loading ? (
@@ -357,23 +373,28 @@ const ViewAnalytics = () => {
                     }}
                   >
                     <TableRow>
-                      {dataHeader.map((column, index) => (
-                        <TableCell key={index}>
-                          <TableSortLabel
-                            active={orderBy === column}
-                            direction={orderBy === column ? order : "asc"}
-                            onClick={() => handleSort(column)}
-                          >
-                            {column}
-                          </TableSortLabel>
-                        </TableCell>
-                      ))}
+                      {(hideColumns.length > 0 ? hideColumns : dataHeader).map(
+                        (column, index) => (
+                          <TableCell key={index}>
+                            <TableSortLabel
+                              active={orderBy === column}
+                              direction={orderBy === column ? order : "asc"}
+                              onClick={() => handleSort(column)}
+                            >
+                              {column}
+                            </TableSortLabel>
+                          </TableCell>
+                        )
+                      )}
                     </TableRow>
                   </TableHead>
                   <TableBody>
                     {sortedRows().map((row, rowIndex) => (
                       <TableRow key={rowIndex}>
-                        {dataHeader.map((column, columnIndex) => (
+                        {(hideColumns.length > 0
+                          ? hideColumns
+                          : dataHeader
+                        ).map((column, columnIndex) => (
                           <React.Fragment key={columnIndex}>
                             <TableCell
                               style={{
@@ -433,6 +454,16 @@ const ViewAnalytics = () => {
           isModalOpen={isOpenAchievementColorModal}
           onModalClose={() => setIsOpenAchievementColorModal(false)}
           onModalSaveClose={handleAchievementColorSave}
+        />
+      )}
+
+      {isOpenHideColumnModal && (
+        <HideColumnModal
+          columns={dataHeader}
+          hideColumns={hideColumnsModal}
+          isModalOpen={isOpenHideColumnModal}
+          onModalClose={() => setIsOpenHideColumnModal(false)}
+          onModalSaveClose={handleHideColumns}
         />
       )}
     </>

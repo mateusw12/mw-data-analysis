@@ -2,6 +2,7 @@ import { Dropdown, MenuProps } from "antd";
 import { ItemType } from "antd/es/menu/hooks/useItems";
 import {
   AiOutlineEdit,
+  AiOutlineEyeInvisible,
   AiOutlineFieldNumber,
   AiOutlineFilter,
   AiOutlineImport,
@@ -16,10 +17,8 @@ import {
 } from "react-icons/bs";
 import { GiProgression } from "react-icons/gi";
 import {
-  MdAdd,
-  MdDeleteOutline,
   MdOutlineClear,
-  MdOutlineSettings,
+  MdOutlineSettings
 } from "react-icons/md";
 
 const ContextMenu = (props: { children; selectMenuItem? }) => {
@@ -30,22 +29,23 @@ const ContextMenu = (props: { children; selectMenuItem? }) => {
       label: "Colunas",
       key: "column",
       icon: <BsTable style={{ transform: "scale(1.5)" }} />,
-      disabled: true,
       children: [
-        {
-          label: "Adicionar",
-          key: "addColumn",
-          icon: <MdAdd style={{ transform: "scale(1.5)" }} />,
-        },
         {
           label: "Editar",
           key: "editColumn",
           icon: <AiOutlineEdit style={{ transform: "scale(1.5)" }} />,
+          disabled: true,
         },
         {
-          label: "Remover",
-          key: "removeColumn",
-          icon: <MdDeleteOutline style={{ transform: "scale(1.5)" }} />,
+          label: "Esconder",
+          key: "hideColumn",
+          icon: <AiOutlineEyeInvisible style={{ transform: "scale(1.5)" }} />,
+        },
+        {
+          label: "Configurar",
+          key: "settingColumn",
+          icon: <MdOutlineSettings style={{ transform: "scale(1.5)" }} />,
+          disabled: true,
         },
       ],
     },
