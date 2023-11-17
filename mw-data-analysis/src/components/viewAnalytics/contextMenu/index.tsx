@@ -16,13 +16,24 @@ import {
   BsTable,
 } from "react-icons/bs";
 import { GiProgression } from "react-icons/gi";
-import {
-  MdOutlineClear,
-  MdOutlineSettings
-} from "react-icons/md";
+import { MdOutlineClear, MdOutlineSettings } from "react-icons/md";
 
 const ContextMenu = (props: { children; selectMenuItem? }) => {
   const { children, selectMenuItem } = props;
+
+  const createGradientStyle = (startColor: string, endColor: string) => ({
+    width: "60px",
+    height: "25px",
+    backgroundImage: `linear-gradient(to right, ${startColor}, ${endColor})`,
+  });
+
+  const blueGradient = createGradientStyle("#409fbf", "#FFFFFF");
+  const greenGradient = createGradientStyle("rgb(112, 207, 160)", "#FFFFFF");
+  const redGradient = createGradientStyle("#fa664c", "#FFFFFF");
+  const orangeGradient = createGradientStyle("#ffbf00", "#FFFFFF");
+  const orangeToGreenGradient = createGradientStyle("#ffbf00", "#40bf80");
+  const redToGreenGradient = createGradientStyle("#fa664c", "#40bf80");
+  const redToBlueGradient = createGradientStyle("#fa664c", "#409fbf");
 
   const items: ItemType[] = [
     {
@@ -92,31 +103,31 @@ const ContextMenu = (props: { children; selectMenuItem? }) => {
       icon: <AiOutlineImport style={{ transform: "scale(1.5)" }} />,
       children: [
         {
-          label: "Verde",
+          label: <div style={greenGradient} />,
           key: "highlightRelevanceGreen",
         },
         {
-          label: "Azul",
+          label: <div style={blueGradient} />,
           key: "highlightRelevanceBlue",
         },
         {
-          label: "Laranja",
+          label: <div style={orangeGradient} />,
           key: "highlightRelevanceOrange",
         },
         {
-          label: "Vermelho",
+          label: <div style={redGradient} />,
           key: "highlightRelevanceRed",
         },
         {
-          label: "Laranja até Verde",
+          label: <div style={orangeToGreenGradient} />,
           key: "highlightRelevanceGreenOrange",
         },
         {
-          label: "Vermelho até Verde",
+          label: <div style={redToGreenGradient} />,
           key: "highlightRelevanceRedGreen",
         },
         {
-          label: "Vermelho até Azul",
+          label: <div style={redToBlueGradient} />,
           key: "highlightRelevanceRedBlue",
         },
       ],
