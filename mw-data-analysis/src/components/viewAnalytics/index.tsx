@@ -65,6 +65,8 @@ const ViewAnalytics = () => {
     const analyticsName = JSON.parse(
       localStorage.getItem("dataTableName") as string
     );
+      console.log(dataTableLocalStorage);
+
     setDataTableName(analyticsName);
 
     sessionStorage.setItem("dataTable", JSON.stringify(dataTableLocalStorage));

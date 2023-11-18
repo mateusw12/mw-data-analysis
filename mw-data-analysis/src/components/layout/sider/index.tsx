@@ -15,7 +15,7 @@ interface SideBarProps {
 type MenuItem = Required<MenuProps>["items"][number];
 
 const SiderBar = (props: SideBarProps) => {
-  const [collapsed, setCollapsed] = useState(false);
+  const [collapsed, setCollapsed] = useState(true);
   const navigate = useNavigate();
 
   const toggleCollapse = () => {

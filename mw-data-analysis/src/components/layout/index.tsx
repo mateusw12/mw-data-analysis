@@ -12,7 +12,7 @@ interface BaseLayoutProps {
 }
 
 const BaseLayout = ({ children }: BaseLayoutProps) => {
-  const [collapsed, setCollapsed] = useState(false);
+  const [collapsed, setCollapsed] = useState(true);
 
   const handleColapsed = (collapsed: boolean) => {
     setCollapsed(collapsed);

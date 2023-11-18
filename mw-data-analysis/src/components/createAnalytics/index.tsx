@@ -16,6 +16,7 @@ import "./style.css";
 import { read, utils } from "xlsx";
 import GenerateDataButton from "../../shared/button/generateDataButton";
 import { AiOutlineUpload } from "react-icons/ai";
+import { format } from "date-fns";
 
 const CreateAnalytics = () => {
   const [form] = useForm();
@@ -48,6 +49,41 @@ const CreateAnalytics = () => {
     navigate("/analytics/view");
   };
 
+const readExcelFile = (file) => {
+  const reader = new FileReader();
+  reader.onload = (event) => {
+    const binaryString = event.target.result;
+    const workbook = read(binaryString, { type: "binary", cellDates: true });
+
+    const sheets = workbook.SheetNames;
+    if (sheets.length) {
+      const rows = utils.sheet_to_json(workbook.Sheets[sheets[0]], {
+        dateNF: "yyyy-mm-ddTHH:MM:ss.SSSZ",
+      });
+
+      const formattedRows = rows.map((row) => {
+        const formattedRow: { [key: string]: string | Date } = {};
+        Object.keys(row).forEach((key) => {
+          const value = row[key];
+          if (value instanceof Date) {
+            formattedRow[key] = format(value, "dd/MM/yyyy");
+          } else {
+            formattedRow[key] = value;
+          }
+        });
+        return formattedRow;
+      });
+
+      const header = Object.keys(formattedRows[0]);
+      setDataHeader(header);
+      setData(formattedRows);
+      setIsLoaded(false);
+    }
+  };
+  reader.readAsBinaryString(file);
+};
+
+  
   return (
     <>
       <Form form={form} name="form" autoComplete="off" onFinish={onFinish}>
@@ -84,77 +120,7 @@ const CreateAnalytics = () => {
                   localStorage.removeItem("responseColumn");
 
                   setIsLoaded(true);
-                  const reader = new FileReader();
-                  reader.onload = (event) => {
-                    const wb = read(event.target.result);
-                    const sheets = wb.SheetNames;
-
-                    localStorage.removeItem("dataToExport");
-                    localStorage.removeItem("iterationColumn");
-                    localStorage.removeItem("isAverageStandardDeviation");
-                    localStorage.removeItem("stdError");
-                    localStorage.removeItem("recalculate");
-                    localStorage.removeItem("fractionalRounds");
-                    localStorage.removeItem("responseColumn");
-
-                    if (sheets.length) {
-                      if (!wb.Sheets[sheets[0]]["!merges"]) {
-                        const rows = utils.sheet_to_json(wb.Sheets[sheets[0]]);
-                        const header = Object.keys(rows[0]);
-                        setDataHeader(header);
-                        setData(rows);
-                        localStorage.setItem("rows", String(rows.length));
-                        localStorage.setItem("header", String(header.length));
-                        localStorage.setItem(
-                          "dataToExportDefault",
-                          JSON.stringify(data)
-                        );
-
-                        setIsLoaded(false);
-                      } else {
-                        if (wb.Sheets[sheets[0]]["!merges"].length === 1) {
-                          const mergedCellsStart =
-                            wb.Sheets[sheets[0]]["!merges"][0].s;
-                          const mergedCellsEnd =
-                            wb.Sheets[sheets[0]]["!merges"][0].e;
-                          if (
-                            mergedCellsStart.c === 0 &&
-                            mergedCellsStart.r === 0 &&
-                            mergedCellsEnd.r === 0
-                          ) {
-                            const lastCell =
-                              wb.Sheets[sheets[0]]["!ref"].split(":")[1];
-                            wb.Sheets[sheets[0]]["!ref"] =
-                              "A" + mergedCellsEnd.c + ":" + lastCell;
-                            const rows = utils.sheet_to_json(
-                              wb.Sheets[sheets[0]]
-                            );
-
-                            const header = Object.keys(rows[0]);
-                            setDataHeader(header);
-                            setData(rows);
-                            localStorage.setItem("rows", String(rows.length));
-                            localStorage.setItem(
-                              "header",
-                              String(header.length)
-                            );
-                            localStorage.setItem(
-                              "dataToExportDefault",
-                              JSON.stringify(data)
-                            );
-                          } else {
-                            setDataHeader([]);
-                            setData([]);
-                            setIsLoaded(false);
-                          }
-                        } else {
-                          setDataHeader([]);
-                          setData([]);
-                        }
-                      }
-                    }
-                  };
-                  reader.readAsArrayBuffer(file);
+                  readExcelFile(file);
                   return false;
                 }}
                 {...draggerProps}

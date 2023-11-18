@@ -1,7 +1,6 @@
 import { Dropdown, MenuProps } from "antd";
 import { ItemType } from "antd/es/menu/hooks/useItems";
 import {
-  AiOutlineEdit,
   AiOutlineEyeInvisible,
   AiOutlineFieldNumber,
   AiOutlineFilter,
@@ -13,7 +12,6 @@ import {
   BsArrowUp,
   BsCalculator,
   BsCalendar4Range,
-  BsTable,
 } from "react-icons/bs";
 import { GiProgression } from "react-icons/gi";
 import { MdOutlineClear, MdOutlineSettings } from "react-icons/md";
@@ -37,28 +35,9 @@ const ContextMenu = (props: { children; selectMenuItem? }) => {
 
   const items: ItemType[] = [
     {
-      label: "Colunas",
-      key: "column",
-      icon: <BsTable style={{ transform: "scale(1.5)" }} />,
-      children: [
-        {
-          label: "Editar",
-          key: "editColumn",
-          icon: <AiOutlineEdit style={{ transform: "scale(1.5)" }} />,
-          disabled: true,
-        },
-        {
-          label: "Esconder",
-          key: "hideColumn",
-          icon: <AiOutlineEyeInvisible style={{ transform: "scale(1.5)" }} />,
-        },
-        {
-          label: "Configurar",
-          key: "settingColumn",
-          icon: <MdOutlineSettings style={{ transform: "scale(1.5)" }} />,
-          disabled: true,
-        },
-      ],
+      label: "Esconder Colunas",
+      key: "hideColumn",
+      icon: <AiOutlineEyeInvisible style={{ transform: "scale(1.5)" }} />,
     },
     {
       label: "Colorir Faixa de Atingimento",
