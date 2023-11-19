@@ -5,7 +5,7 @@ const Home = () => {
     <>
       <div className="home-content">
         <img
-          src="/src/assets/pages/loog.png"
+          src="/assets/pages/loog.png"
           style={{ transform: "scale(1.3)" }}
         />
       </div>

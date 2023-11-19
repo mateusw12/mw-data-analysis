@@ -125,7 +125,6 @@ const ContextMenu = (props: { children; selectMenuItem? }) => {
       label: "Limpar Fórmula",
       key: "clearFormula",
       icon: <MdOutlineClear style={{ transform: "scale(1.5)" }} />,
-      disabled: true,
     },
   ];
 

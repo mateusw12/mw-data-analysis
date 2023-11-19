@@ -204,6 +204,8 @@ const ViewAnalytics = () => {
       case "hideColumn":
         setIsOpenHideColumnModal(true);
         break;
+      case "clearFormula":
+        break;
       case "clearEffect":
         setIsColorEvolution(false);
         setColorEffect(null);
