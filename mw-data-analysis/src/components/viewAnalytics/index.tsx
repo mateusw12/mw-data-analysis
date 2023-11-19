@@ -522,15 +522,22 @@ const ViewAnalytics = () => {
                     ))}
                   </TableBody>
                   <TableFooter>
-                    <TableRow >
+                    <TableRow>
                       {(hideColumns.length > 0 ? hideColumns : dataHeader).map(
-                        (column, index) => (
-                          <TableCell key={index}>
-                            {typeof columnSums[column] === "number"
-                              ? columnSums[column]
-                              : ""}
-                          </TableCell>
-                        )
+                        (column, index) =>
+                          index === 0 ? (
+                            <>
+                              <TableCell key={index}>Total</TableCell>
+                            </>
+                          ) : (
+                            <>
+                              <TableCell key={index}>
+                                {typeof columnSums[column] === "number"
+                                  ? columnSums[column]
+                                  : ""}
+                              </TableCell>
+                            </>
+                          )
                       )}
                     </TableRow>
                   </TableFooter>
