@@ -8,6 +8,8 @@ import {
 } from "@mui/material";
 import { Col, Modal, Row, ColorPicker } from "antd";
 import { useState } from "react";
+import CancelButton from "../../../shared/button/cancelButton";
+import SaveButton from "../../../shared/button/saveButton";
 
 const CustomEffectColorModal = (props: {
   isModalOpen: boolean;
@@ -48,10 +50,18 @@ const CustomEffectColorModal = (props: {
         open={isModalOpen}
         onOk={handleOk}
         onCancel={handleCancel}
-        width={750}
+        width={400}
+        footer={[
+          <div
+            style={{ display: "flex", gap: "10px", justifyContent: "flex-end" }}
+          >
+            <CancelButton onClick={handleCancel} />
+            <SaveButton label="Aplicar" onClick={handleOk} />
+          </div>,
+        ]}
       >
         <Row>
-          <Col span={12}>
+          <Col span={24}>
             <FormControl fullWidth>
               <InputLabel id="demo-simple-select-label">
                 Tipo de Destaque
@@ -71,10 +81,10 @@ const CustomEffectColorModal = (props: {
             </FormControl>
           </Col>
         </Row>
-        <Row align={"middle"}>
+        <Row align={"middle"} style={{ marginBottom: 20 }}>
           {typeHighlight === "minorValue" ? (
             <>
-              <Col span={6}>
+              <Col span={24}>
                 <TextField
                   onChange={(value) => setMinValue(value.target.value)}
                   fullWidth
@@ -84,7 +94,41 @@ const CustomEffectColorModal = (props: {
                   variant="standard"
                 />
               </Col>
-              <Col offset={1} span={9}>
+            </>
+          ) : typeHighlight === "majorValue" ? (
+            <>
+              <Col span={24}>
+                <TextField
+                  onChange={(value) => setMaxValue(value.target.value)}
+                  fullWidth
+                  type="number"
+                  id="standard-basic"
+                  label="Insira o valor máximo"
+                  variant="standard"
+                />
+              </Col>
+            </>
+          ) : typeHighlight === "betweenValue" ? (
+            <>
+              <Col span={24}>
+                <TextField
+                  onChange={(value) => setMinValue(value.target.value)}
+                  fullWidth
+                  type="number"
+                  id="standard-basic"
+                  label="Insira o valor mínimo"
+                  variant="standard"
+                />
+              </Col>
+            </>
+          ) : (
+            <></>
+          )}
+        </Row>
+        <Row style={{ marginBottom: 20 }}>
+          {typeHighlight === "minorValue" ? (
+            <>
+              <Col span={24}>
                 <ColorPicker
                   onChange={(value) => setColorValue(value.toHexString())}
                   showText={(color) => (
@@ -95,17 +139,7 @@ const CustomEffectColorModal = (props: {
             </>
           ) : typeHighlight === "majorValue" ? (
             <>
-              <Col span={6}>
-                <TextField
-                  onChange={(value) => setMaxValue(value.target.value)}
-                  fullWidth
-                  type="number"
-                  id="standard-basic"
-                  label="Insira o valor máximo"
-                  variant="standard"
-                />
-              </Col>
-              <Col offset={1} span={9}>
+              <Col span={24}>
                 <ColorPicker
                   onChange={(value) => setColorValue(value.toHexString())}
                   showText={(color) => (
@@ -116,17 +150,7 @@ const CustomEffectColorModal = (props: {
             </>
           ) : typeHighlight === "betweenValue" ? (
             <>
-              <Col span={6}>
-                <TextField
-                  onChange={(value) => setMinValue(value.target.value)}
-                  fullWidth
-                  type="number"
-                  id="standard-basic"
-                  label="Insira o valor mínimo"
-                  variant="standard"
-                />
-              </Col>
-              <Col offset={1} span={6}>
+              <Col span={24}>
                 <TextField
                   onChange={(value) => setMaxValue(value.target.value)}
                   fullWidth
@@ -136,19 +160,25 @@ const CustomEffectColorModal = (props: {
                   variant="standard"
                 />
               </Col>
-              <Col offset={1} span={9}>
-                <ColorPicker
-                  onChange={(value) => setColorValue(value.toHexString())}
-                  showText={(color) => (
-                    <span>Selecione a cor: ({color.toHexString()})</span>
-                  )}
-                />
-              </Col>
             </>
           ) : (
             <></>
           )}
         </Row>
+        {typeHighlight === "betweenValue" ? (
+          <>
+            <Col span={24}>
+              <ColorPicker
+                onChange={(value) => setColorValue(value.toHexString())}
+                showText={(color) => (
+                  <span>Selecione a cor: ({color.toHexString()})</span>
+                )}
+              />
+            </Col>
+          </>
+        ) : (
+          <></>
+        )}
       </Modal>
     </>
   );

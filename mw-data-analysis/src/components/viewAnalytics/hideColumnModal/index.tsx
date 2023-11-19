@@ -1,10 +1,12 @@
+import { useState } from "react";
 import { Col, Modal, Row } from "antd";
 import MultiSelect from "../../../shared/multiSelect";
-import { useState } from "react";
+import CancelButton from "../../../shared/button/cancelButton";
+import SaveButton from "../../../shared/button/saveButton";
 
 const HideColumnModal = (props: {
   isModalOpen: boolean;
-  hideColumns:string[];
+  hideColumns: string[];
   onModalClose: () => void;
   onModalSaveClose: (hideColumns: string[]) => void;
   columns: string[];
@@ -26,9 +28,17 @@ const HideColumnModal = (props: {
     <>
       <Modal
         title="Esconder Coluna"
-        visible={isModalOpen}
+        open={isModalOpen}
         onOk={handleOk}
         onCancel={handleCancel}
+        footer={[
+          <div
+            style={{ display: "flex", gap: "10px", justifyContent: "flex-end" }}
+          >
+            <CancelButton onClick={handleCancel} />
+            <SaveButton label="Aplicar" onClick={handleOk} />
+          </div>,
+        ]}
       >
         <Row>
           <Col span={24}>

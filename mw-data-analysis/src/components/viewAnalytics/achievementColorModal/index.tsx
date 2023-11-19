@@ -1,6 +1,8 @@
 import { TextField } from "@mui/material";
 import { Col, ColorPicker, Modal, Row } from "antd";
 import { useState } from "react";
+import CancelButton from "../../../shared/button/cancelButton";
+import SaveButton from "../../../shared/button/saveButton";
 
 const AchievementColorModal = (props: {
   isModalOpen: boolean;
@@ -63,6 +65,14 @@ const AchievementColorModal = (props: {
         onOk={handleOk}
         onCancel={handleCancel}
         width={500}
+        footer={[
+          <div
+            style={{ display: "flex", gap: "10px", justifyContent: "flex-end" }}
+          >
+            <CancelButton onClick={handleCancel} />
+            <SaveButton label="Aplicar" onClick={handleOk} />
+          </div>,
+        ]}
       >
         <Row style={{ marginBottom: 20 }} align={"middle"}>
           <Col span={10}>

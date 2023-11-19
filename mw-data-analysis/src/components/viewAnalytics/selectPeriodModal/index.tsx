@@ -75,7 +75,7 @@ export const SelectPeriodModal = (props: {
           >
             <CancelButton onClick={handleCancel} />
             <ResetButton onClick={handleReset} />
-            <SaveButton onClick={handleOk} />
+            <SaveButton label="Aplicar" onClick={handleOk} />
           </div>,
         ]}
         onCancel={handleCancel}

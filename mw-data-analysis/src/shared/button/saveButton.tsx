@@ -1,8 +1,8 @@
 import Button from "@mui/material/Button";
 import { AiOutlineCheck } from "react-icons/ai";
 
-const SaveButton = (props: { onClick?: () => void }) => {
-  const { onClick } = props;
+const SaveButton = (props: { onClick?: () => void; label?: string }) => {
+  const { onClick, label } = props;
   return (
     <>
       <Button
@@ -13,7 +13,7 @@ const SaveButton = (props: { onClick?: () => void }) => {
         type="submit"
         onClick={onClick}
       >
-        Salvar
+        {label ? label : "Salvar"}
       </Button>
     </>
   );
