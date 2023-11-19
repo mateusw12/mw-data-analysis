@@ -11,26 +11,31 @@ import {
   TextField,
 } from "@mui/material";
 import { Spin } from "antd";
+import FilterButton from "../../shared/button/filterButton";
+import GenerateChartButton from "../../shared/button/generateChart";
 import SaveButton from "../../shared/button/saveButton";
 import {
   getColorScale,
   getEvolutionColor,
   getRelevanceColor,
 } from "../../utils/colorUtil";
+import { periodFiltered, isValidDateFormat } from "../../utils/dateUtil";
 import { extractDataTable } from "../../utils/extractDataTable";
 import AchievementColorModal from "./achievementColorModal";
 import ContextMenu from "./contextMenu";
 import CustomEffectColorModal from "./cutomColorEffectModal";
-import { AchivementColor, AchivementValue } from "./interface";
-import "./style.css";
-import GenerateChartButton from "../../shared/button/generateChart";
 import HideColumnModal from "./hideColumnModal";
+import { AchivementColor, AchivementValue } from "./interface";
+import SelectPeriodModal from "./selectPeriodModal";
+import "./style.css";
 
 const ViewAnalytics = () => {
   type Order = "asc" | "desc";
 
-  const [data, setData] = useState({});
+  const [data, setData] = useState([]);
   const [dataHeader, setDataHeader] = useState([]);
+  const [dataRows, setDataRows] = useState({});
+
   const [hideColumnsModal, setHideColumnsModal] = useState([]);
   const [hideColumns, setHideColumns] = useState([]);
   const [dataTableName, setDataTableName] = useState("");
@@ -53,9 +58,10 @@ const ViewAnalytics = () => {
   const [minColumnValue, setMinColumnValue] = useState(null);
   const [maxColumnValue, setMaxColumnValue] = useState(null);
   const [isOpenHideColumnModal, setIsOpenHideColumnModal] = useState(false);
-
+  const [isOpenSelectPeriodModal, setIsOpenSelectPeriodModal] = useState(false);
   const [orderBy, setOrderBy] = useState(null);
   const [order, setOrder] = useState<Order>("asc");
+  const [dateColumns, setDateColumns] = useState([]);
 
   useEffect(() => {
     setLoading(true);
@@ -65,8 +71,6 @@ const ViewAnalytics = () => {
     const analyticsName = JSON.parse(
       localStorage.getItem("dataTableName") as string
     );
-      console.log(dataTableLocalStorage);
-
     setDataTableName(analyticsName);
 
     sessionStorage.setItem("dataTable", JSON.stringify(dataTableLocalStorage));
@@ -76,13 +80,19 @@ const ViewAnalytics = () => {
 
     const dataToSend = extractDataTable(dataTable);
     setDataHeader(dataToSend.itens);
-    setData(dataToSend.obj);
+    setDataRows(dataToSend.obj);
 
     const minMaxValues = getMinMaxValues(dataToSend.itens, dataToSend.obj);
     setMinColumnValue(minMaxValues.min);
     setMaxColumnValue(minMaxValues.max);
     setLoading(false);
   }, []);
+
+  useEffect(() => {
+    const rows = sortedRows(dataRows, dataHeader);
+    setData(rows);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [dataHeader, dataRows]);
 
   const onSaveClick = () => {};
 
@@ -92,13 +102,15 @@ const ViewAnalytics = () => {
     setOrderBy(column);
   };
 
-  const sortedRows = () => {
+  const sortedRows = (localStorageRows, columns) => {
     const dataSource =
-      dataHeader.length > 0
-        ? data[dataHeader[0]].map((_, rowIndex) => {
+      columns.length > 0
+        ? localStorageRows[columns[0]].map((_, rowIndex) => {
             const rowData = {};
-            dataHeader.forEach((column) => {
-              rowData[column] = data[column] ? data[column][rowIndex] : null;
+            columns.forEach((column) => {
+              rowData[column] = localStorageRows[column]
+                ? localStorageRows[column][rowIndex]
+                : null;
             });
             return rowData;
           })
@@ -250,7 +262,15 @@ const ViewAnalytics = () => {
   };
 
   useEffect(() => {
-    // empty useEffect
+    const sortedDataSource = () => {
+      setData(sortedRows(dataRows, dataHeader));
+    };
+    sortedDataSource();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [orderBy, order]);
+
+  useEffect(() => {
+    // empty use effect
   }, [
     customEffectColorValue,
     customEffectMaxValue,
@@ -259,9 +279,9 @@ const ViewAnalytics = () => {
     achievementColor,
     achievementValue,
     isColorEvolution,
-    orderBy,
-    order,
     hideColumns,
+    dataRows,
+    dataHeader,
   ]);
 
   const getCustomCellStyle = (cellValue) => {
@@ -338,6 +358,58 @@ const ViewAnalytics = () => {
     setIsOpenHideColumnModal(false);
   };
 
+  const handleSelectPeriod = () => {
+    const columns: string[] = [];
+    const dataTable = JSON.parse(sessionStorage.getItem("dataTable"));
+    if (!dataTable || dataTable.length <= 0) return;
+
+    const dataToSend = extractDataTable(dataTable);
+
+    for (const column of dataToSend.itens) {
+      const values = dataToSend.obj[column];
+      if (values && values.length > 0 && values.every(isValidDateFormat)) {
+        columns.push(column);
+      }
+    }
+    setDateColumns(columns);
+    setIsOpenSelectPeriodModal(true);
+  };
+
+  const handleSelectPeriodSave = (
+    period: string,
+    columnDate: string,
+    maxDate?,
+    minDate?
+  ) => {
+    const dataTable = JSON.parse(sessionStorage.getItem("dataTable"));
+    if (!dataTable || dataTable.length <= 0) return;
+    const dataToSend = extractDataTable(dataTable);
+
+    let filteredRows = dataToSend.obj;
+    const today = new Date();
+    filteredRows = periodFiltered(
+      period,
+      today,
+      columnDate,
+      filteredRows,
+      maxDate,
+      minDate
+    );
+
+    setData(sortedRows(filteredRows, dataHeader));
+    setIsOpenSelectPeriodModal(false);
+  };
+
+  const handleSelectPeriodModalClose = (isReset?: boolean) => {
+    setIsOpenSelectPeriodModal(false);
+    if (!isReset) return;
+    const dataTable = JSON.parse(sessionStorage.getItem("dataTable"));
+    if (!dataTable || dataTable.length <= 0) return;
+    const dataToSend = extractDataTable(dataTable);
+    const rows = sortedRows(dataToSend.obj, dataHeader);
+    setData(rows);
+  };
+
   return (
     <>
       {loading ? (
@@ -356,6 +428,7 @@ const ViewAnalytics = () => {
               style={{ width: 500 }}
             />
             <div className="align-button">
+              <FilterButton onClick={handleSelectPeriod} />
               <GenerateChartButton disabled={true} onClick={onSaveClick} />
               <SaveButton onClick={onSaveClick} />
             </div>
@@ -364,11 +437,7 @@ const ViewAnalytics = () => {
           <ContextMenu selectMenuItem={handleSelectItem}>
             <div>
               <TableContainer component={Paper}>
-                <Table
-                  size="small"
-                  aria-label="a dense table"
-                  className="custom-table"
-                >
+                <Table size="small" className="custom-table">
                   <TableHead
                     style={{
                       background: "#ededed",
@@ -391,7 +460,7 @@ const ViewAnalytics = () => {
                     </TableRow>
                   </TableHead>
                   <TableBody>
-                    {sortedRows().map((row, rowIndex) => (
+                    {data.map((row, rowIndex) => (
                       <TableRow key={rowIndex}>
                         {(hideColumns.length > 0
                           ? hideColumns
@@ -466,6 +535,15 @@ const ViewAnalytics = () => {
           isModalOpen={isOpenHideColumnModal}
           onModalClose={() => setIsOpenHideColumnModal(false)}
           onModalSaveClose={handleHideColumns}
+        />
+      )}
+
+      {isOpenSelectPeriodModal && (
+        <SelectPeriodModal
+          dateColumns={dateColumns}
+          isModalOpen={isOpenSelectPeriodModal}
+          onModalClose={handleSelectPeriodModalClose}
+          onSaveClick={handleSelectPeriodSave}
         />
       )}
     </>

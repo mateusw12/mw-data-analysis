@@ -82,7 +82,6 @@ const readExcelFile = (file) => {
   };
   reader.readAsBinaryString(file);
 };
-
   
   return (
     <>

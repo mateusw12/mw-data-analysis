@@ -115,7 +115,7 @@ const ContextMenu = (props: { children; selectMenuItem? }) => {
       label: "Filtros",
       key: "filter",
       icon: <AiOutlineFilter style={{ transform: "scale(1.5)" }} />,
-      disabled: true,
+      disabled: true
     },
     {
       label: "Fórmula",

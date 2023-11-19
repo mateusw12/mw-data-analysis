@@ -13,18 +13,21 @@ import {
 
 const MultiSelect = (props: {
   isFullWidth?: boolean;
+  style?;
   dataSource: string[];
   label: string;
   selectItems: string[];
   onChange: (items: string[]) => void;
 }) => {
-  const { isFullWidth, dataSource, label, selectItems, onChange } = props;
+  const { isFullWidth, dataSource, label, selectItems, onChange, style } =
+    props;
 
   return (
     <>
       <FormControl variant="standard" fullWidth={isFullWidth}>
         <InputLabel id="demo-multiple-name-label">{label}</InputLabel>
         <Select
+          style={style}
           fullWidth={isFullWidth}
           multiple={true}
           labelId="demo-multiple-name-label"
