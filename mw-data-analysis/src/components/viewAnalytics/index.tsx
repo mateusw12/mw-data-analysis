@@ -5,6 +5,7 @@ import {
   TableBody,
   TableCell,
   TableContainer,
+  TableFooter,
   TableHead,
   TableRow,
   TableSortLabel,
@@ -63,6 +64,8 @@ const ViewAnalytics = () => {
   const [order, setOrder] = useState<Order>("asc");
   const [dateColumns, setDateColumns] = useState([]);
 
+  const [columnSums, setColumnSums] = useState({});
+
   useEffect(() => {
     setLoading(true);
     const dataTableLocalStorage = JSON.parse(
@@ -89,9 +92,22 @@ const ViewAnalytics = () => {
   }, []);
 
   useEffect(() => {
+    const calculateColumnSums = (data) => {
+      const sums = {};
+      dataHeader.forEach((column) => {
+        if (typeof data[column][0] === "number") {
+          sums[column] = data[column].reduce((acc, value) => acc + value, 0);
+        }
+      });
+      setColumnSums(sums);
+    };
+    calculateColumnSums(dataRows);
+  }, [dataHeader, dataRows]);
+
+  useEffect(() => {
     const rows = sortedRows(dataRows, dataHeader);
     setData(rows);
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [dataHeader, dataRows]);
 
   const onSaveClick = () => {};
@@ -505,6 +521,19 @@ const ViewAnalytics = () => {
                       </TableRow>
                     ))}
                   </TableBody>
+                  <TableFooter>
+                    <TableRow >
+                      {(hideColumns.length > 0 ? hideColumns : dataHeader).map(
+                        (column, index) => (
+                          <TableCell key={index}>
+                            {typeof columnSums[column] === "number"
+                              ? columnSums[column]
+                              : ""}
+                          </TableCell>
+                        )
+                      )}
+                    </TableRow>
+                  </TableFooter>
                 </Table>
               </TableContainer>
             </div>

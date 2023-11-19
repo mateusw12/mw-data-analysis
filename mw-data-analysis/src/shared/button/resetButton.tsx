@@ -1,5 +1,5 @@
 import Button from "@mui/material/Button";
-import { MdOutlineCleaningServices } from "react-icons/md";
+import { AiOutlineUndo } from "react-icons/ai";
 
 const ResetButton = (props: {
   onClick?: () => void;
@@ -12,7 +12,7 @@ const ResetButton = (props: {
     <>
       <Button
         color="info"
-        startIcon={<MdOutlineCleaningServices />}
+        startIcon={<AiOutlineUndo />}
         size="small"
         variant="contained"
         onClick={onClick}

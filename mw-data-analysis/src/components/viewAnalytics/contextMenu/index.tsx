@@ -3,7 +3,6 @@ import { ItemType } from "antd/es/menu/hooks/useItems";
 import {
   AiOutlineEyeInvisible,
   AiOutlineFieldNumber,
-  AiOutlineFilter,
   AiOutlineImport,
 } from "react-icons/ai";
 import {
@@ -110,12 +109,6 @@ const ContextMenu = (props: { children; selectMenuItem? }) => {
           key: "highlightRelevanceRedBlue",
         },
       ],
-    },
-    {
-      label: "Filtros",
-      key: "filter",
-      icon: <AiOutlineFilter style={{ transform: "scale(1.5)" }} />,
-      disabled: true
     },
     {
       label: "Fórmula",
