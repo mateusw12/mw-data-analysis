@@ -58,7 +58,7 @@ const GenerateChartModal = (props: {
     const data: GenerateChartData = {
       chartType: chartType,
       xVariable: xVariable,
-      yVarbiable: yVariable,
+      yVariable: yVariable,
     };
     onSaveClick(data);
   };

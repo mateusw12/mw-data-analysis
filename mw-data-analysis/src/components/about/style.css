@@ -1,0 +1,37 @@
+.about {
+    font-family: 'Arial', sans-serif;
+    color: #333;
+    display: flex;
+}
+
+.about-container {
+    display: flex;
+}
+
+h1,
+h2,
+h3 {
+    color: #004AAD;
+}
+
+p {
+    line-height: 1.6;
+}
+
+ul {
+    padding-left: 20px;
+}
+
+.text {
+    flex: 1;
+}
+
+.images {
+    margin-left: 20px;
+    display: flex;
+    gap: 20;
+    flex-direction: column;
+    width: 550px;
+    opacity: 0.7;
+    border-radius: 10px;
+}

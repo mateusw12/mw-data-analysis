@@ -5,4 +5,6 @@ export const BREAD_CRUMB_ITEMS: { [key: string]: string } = {
   create: "Criar",
   query: "Consultar",
   view: "Vizualizar",
+  aboutus: "Sobre",
+  support: "Suporte",
 };

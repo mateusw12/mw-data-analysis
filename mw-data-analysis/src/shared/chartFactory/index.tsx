@@ -38,7 +38,7 @@ const ChartFactory = (props: {
 
   const renderChart = () => {
     const groupedData = dataToChart.reduce((acc, data) => {
-      const label = data[generateChartData.yVarbiable];
+      const label = data[generateChartData.yVariable];
       const value = data[generateChartData.xVariable];
 
       if (!acc[label]) {
@@ -72,7 +72,7 @@ const ChartFactory = (props: {
         },
         title: {
           display: true,
-          text: `${generateChartData.yVarbiable} x ${generateChartData.xVariable}`,
+          text: `${generateChartData.yVariable} x ${generateChartData.xVariable}`,
           font: {
             weight: "bold",
           },
@@ -95,7 +95,7 @@ const ChartFactory = (props: {
           },
           title: {
             display: true,
-            text: generateChartData.yVarbiable,
+            text: generateChartData.yVariable,
           },
         },
       },

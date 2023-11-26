@@ -2,9 +2,15 @@ import "../style.css";
 import { Button } from "antd";
 import { AiOutlineInfoCircle, AiOutlineTool } from "react-icons/ai";
 import { FiLogOut } from "react-icons/fi";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 const Header = () => {
+  const navigate = useNavigate();
+
+  const hadleAboutClick = () => {
+    navigate("/about-us");
+  };
+
   return (
     <>
       <div className="header">
@@ -24,6 +30,7 @@ const Header = () => {
           />
           <Button
             title="Sobre"
+            onClick={hadleAboutClick}
             className="logout-button"
             icon={<AiOutlineInfoCircle style={{ transform: "scale(1.3)" }} />}
           />

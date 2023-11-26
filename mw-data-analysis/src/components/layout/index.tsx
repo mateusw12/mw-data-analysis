@@ -28,7 +28,7 @@ const BaseLayout = ({ children }: BaseLayoutProps) => {
   for (const path of currentPath) {
     if (path.length > 0) {
       const item = {
-        title: BREAD_CRUMB_ITEMS[path],
+        title: BREAD_CRUMB_ITEMS[path.replace("-", "")],
       };
       newItems.push(item);
     }

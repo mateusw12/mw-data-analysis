@@ -5,6 +5,7 @@ import Home from "./components/home";
 import BaseLayout from "./components/layout";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import ViewAnalytics from "./components/viewAnalytics";
+import About from "./components/about";
 
 function App() {
   return (
@@ -16,6 +17,7 @@ function App() {
             <Route path="*" element={<ErrorPage />} />
             <Route path="/analytics/create" element={<CreateAnalytics />} />
             <Route path="/analytics/view" element={<ViewAnalytics />} />
+            <Route path="/about-us" element={<About />} />
           </Routes>
         </BaseLayout>
       </BrowserRouter>

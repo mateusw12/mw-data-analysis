@@ -17,13 +17,17 @@
 
 .content {
     grid-area: content;
-    background-color: #FFF;
-    padding: 10px w0px;
+    background-color: #fff;
+    padding: 10px;
     overflow: auto;
 }
 
 .main {
-    padding: 20px
+    padding: 20px;
+    background-color: #fff;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
+    height: "100%";
 }
 
 .bread-crumb-align {
