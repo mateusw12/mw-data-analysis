@@ -1,5 +1,13 @@
 import chroma from "chroma-js";
 
+export const blueTones = [
+  "#004AAD",
+  "#5271FF",
+  "#0097B2",
+  "#0CC0DF",
+  "#5CE1E6",
+];
+
 export const getColorScale = (value, min, max, colors: string[]) => {
   if (typeof value === "number") {
     if (colors.length >= 2) {

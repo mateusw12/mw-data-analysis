@@ -124,7 +124,7 @@ const readExcelFile = (file) => {
                 }}
                 {...draggerProps}
               >
-                <Button icon={<AiOutlineUpload />}>Click to Upload</Button>
+                <Button icon={<AiOutlineUpload />}>Clique para Anexar</Button>
               </Upload>
             </Form.Item>
           </Col>

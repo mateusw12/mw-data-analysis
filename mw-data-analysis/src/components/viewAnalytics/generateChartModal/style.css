@@ -1,0 +1,6 @@
+.align-chart-icon {
+    display: flex;
+    justify-content: flex-start;
+    gap: 10;
+    align-items: center;
+}

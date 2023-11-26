@@ -7,7 +7,7 @@ const FilterButton = (props: { onClick?: () => void; disabled?: boolean }) => {
   return (
     <>
       <Button
-        color="info"
+        color="warning"
         startIcon={<BsFilter />}
         size="small"
         variant="contained"

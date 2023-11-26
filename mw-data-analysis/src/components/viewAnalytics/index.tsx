@@ -29,6 +29,11 @@ import HideColumnModal from "./hideColumnModal";
 import { AchivementColor, AchivementValue } from "./interface";
 import SelectPeriodModal from "./selectPeriodModal";
 import "./style.css";
+import GenerateAnalysisButton from "../../shared/button/generateAnalysis";
+import GenerateChartModal from "./generateChartModal";
+import { GenerateChartData } from "./generateChartModal/interface";
+import ViewChartButton from "../../shared/button/viewChartButton";
+import ChartFactory from "../../shared/chartFactory";
 
 const ViewAnalytics = () => {
   type Order = "asc" | "desc";
@@ -63,7 +68,10 @@ const ViewAnalytics = () => {
   const [orderBy, setOrderBy] = useState(null);
   const [order, setOrder] = useState<Order>("asc");
   const [dateColumns, setDateColumns] = useState([]);
-
+  const [isGenerateChart, setIsGenerateChart] = useState(false);
+  const [isOpenGenerateModalChart, setIsOpenGenerateModalChart] =
+    useState(false);
+  const [chartBuildData, setChartBuildData] = useState<GenerateChartData>();
   const [columnSums, setColumnSums] = useState({});
 
   useEffect(() => {
@@ -428,6 +436,19 @@ const ViewAnalytics = () => {
     setData(rows);
   };
 
+  const onGenerateChartClick = () => {
+    setIsGenerateChart(true);
+  };
+
+  const onGenerateAnalysisClick = () => {
+    setIsGenerateChart(false);
+  };
+
+  const handleGenerateChartSave = (generateChartData: GenerateChartData) => {
+    setChartBuildData(generateChartData);
+    setIsOpenGenerateModalChart(false);
+  };
+
   return (
     <>
       {loading ? (
@@ -447,106 +468,153 @@ const ViewAnalytics = () => {
             />
             <div className="align-button">
               <FilterButton onClick={handleSelectPeriod} />
-              <GenerateChartButton disabled={true} onClick={onSaveClick} />
+
+              {isGenerateChart ? (
+                <>
+                  <GenerateAnalysisButton onClick={onGenerateAnalysisClick} />
+                  <ViewChartButton
+                    onClick={() => setIsOpenGenerateModalChart(true)}
+                  />
+                </>
+              ) : (
+                <>
+                  <GenerateChartButton onClick={onGenerateChartClick} />
+                </>
+              )}
+
               <SaveButton onClick={onSaveClick} />
             </div>
           </div>
 
-          <ContextMenu selectMenuItem={handleSelectItem}>
-            <div>
-              <TableContainer component={Paper}>
-                <Table size="small" className="custom-table">
-                  <TableHead
-                    style={{
-                      background: "#ededed",
-                    }}
-                  >
-                    <TableRow>
-                      {(hideColumns.length > 0 ? hideColumns : dataHeader).map(
-                        (column, index) => (
-                          <TableCell key={index}>
-                            <TableSortLabel
-                              active={orderBy === column}
-                              direction={orderBy === column ? order : "asc"}
-                              onClick={() => handleSort(column)}
-                            >
-                              {column}
-                            </TableSortLabel>
-                          </TableCell>
-                        )
-                      )}
-                    </TableRow>
-                  </TableHead>
-                  <TableBody>
-                    {data.map((row, rowIndex) => (
-                      <TableRow key={rowIndex}>
-                        {(hideColumns.length > 0
-                          ? hideColumns
-                          : dataHeader
-                        ).map((column, columnIndex) => (
-                          <React.Fragment key={columnIndex}>
-                            <TableCell
-                              style={{
-                                background: isColorEvolution
-                                  ? getColorEvolutionCellStyle(
-                                      row[column],
-                                      Object.values(row)
-                                    )
-                                  : isAchievement
-                                  ? getAchievementCellStyle(row[column])
-                                  : relevanceColor.length > 0
-                                  ? getColorScale(
-                                      row[column],
-                                      minColumnValue,
-                                      maxColumnValue,
-                                      relevanceColor
-                                    )
-                                  : colorEffect && colorEffect === "customColor"
-                                  ? getCustomCellStyle(row[column])
-                                  : "",
-                              }}
-                              align={
-                                typeof row[column] == "number"
-                                  ? "right"
-                                  : "left"
-                              }
-                              className={
-                                colorEffect && colorEffect === "customColor"
-                                  ? ""
-                                  : getCellClassName(row[column])
-                              }
-                            >
-                              {row[column] !== null ? row[column] : ""}
+          {isGenerateChart ? (
+            <>
+              <div
+                style={{
+                  display: "flex",
+                  justifyContent: "center",
+                  alignContent: "center",
+                }}
+              >
+                {chartBuildData ? (
+                  <>
+                    <ChartFactory
+                      generateChartData={chartBuildData}
+                      dataToChart={data}
+                    />
+                  </>
+                ) : (
+                  <>
+                    <img
+                      style={{ opacity: 0.7 }}
+                      src="/assets/pages/build-chart.png"
+                    />
+                  </>
+                )}
+              </div>
+            </>
+          ) : (
+            <>
+              <ContextMenu selectMenuItem={handleSelectItem}>
+                <div>
+                  <TableContainer component={Paper}>
+                    <Table size="small" className="custom-table">
+                      <TableHead
+                        style={{
+                          background: "#ededed",
+                        }}
+                      >
+                        <TableRow>
+                          {(hideColumns.length > 0
+                            ? hideColumns
+                            : dataHeader
+                          ).map((column, index) => (
+                            <TableCell key={index}>
+                              <TableSortLabel
+                                active={orderBy === column}
+                                direction={orderBy === column ? order : "asc"}
+                                onClick={() => handleSort(column)}
+                              >
+                                {column}
+                              </TableSortLabel>
                             </TableCell>
-                          </React.Fragment>
+                          ))}
+                        </TableRow>
+                      </TableHead>
+                      <TableBody>
+                        {data.map((row, rowIndex) => (
+                          <TableRow key={rowIndex}>
+                            {(hideColumns.length > 0
+                              ? hideColumns
+                              : dataHeader
+                            ).map((column, columnIndex) => (
+                              <React.Fragment key={columnIndex}>
+                                <TableCell
+                                  style={{
+                                    background: isColorEvolution
+                                      ? getColorEvolutionCellStyle(
+                                          row[column],
+                                          Object.values(row)
+                                        )
+                                      : isAchievement
+                                      ? getAchievementCellStyle(row[column])
+                                      : relevanceColor.length > 0
+                                      ? getColorScale(
+                                          row[column],
+                                          minColumnValue,
+                                          maxColumnValue,
+                                          relevanceColor
+                                        )
+                                      : colorEffect &&
+                                        colorEffect === "customColor"
+                                      ? getCustomCellStyle(row[column])
+                                      : "",
+                                  }}
+                                  align={
+                                    typeof row[column] == "number"
+                                      ? "right"
+                                      : "left"
+                                  }
+                                  className={
+                                    colorEffect && colorEffect === "customColor"
+                                      ? ""
+                                      : getCellClassName(row[column])
+                                  }
+                                >
+                                  {row[column] !== null ? row[column] : ""}
+                                </TableCell>
+                              </React.Fragment>
+                            ))}
+                          </TableRow>
                         ))}
-                      </TableRow>
-                    ))}
-                  </TableBody>
-                  <TableFooter>
-                    <TableRow>
-                      {(hideColumns.length > 0 ? hideColumns : dataHeader).map(
-                        (column, index) =>
-                          index === 0 ? (
-                            <>
-                              <TableCell key={index}>Total</TableCell>
-                            </>
-                          ) : (
-                            <>
-                              <TableCell key={index}>
-                                {typeof columnSums[column] === "number"
-                                  ? columnSums[column]
-                                  : ""}
-                              </TableCell>
-                            </>
-                          )
-                      )}
-                    </TableRow>
-                  </TableFooter>
-                </Table>
-              </TableContainer>
-            </div>
-          </ContextMenu>
+                      </TableBody>
+                      <TableFooter>
+                        <TableRow>
+                          {(hideColumns.length > 0
+                            ? hideColumns
+                            : dataHeader
+                          ).map((column, index) =>
+                            index === 0 ? (
+                              <>
+                                <TableCell key={index}>Total</TableCell>
+                              </>
+                            ) : (
+                              <>
+                                <TableCell key={index}>
+                                  {typeof columnSums[column] === "number"
+                                    ? columnSums[column]
+                                    : ""}
+                                </TableCell>
+                              </>
+                            )
+                          )}
+                        </TableRow>
+                      </TableFooter>
+                    </Table>
+                  </TableContainer>
+                </div>
+              </ContextMenu>
+            </>
+          )}
         </>
       )}
 
@@ -582,6 +650,16 @@ const ViewAnalytics = () => {
           isModalOpen={isOpenSelectPeriodModal}
           onModalClose={handleSelectPeriodModalClose}
           onSaveClick={handleSelectPeriodSave}
+        />
+      )}
+
+      {isOpenGenerateModalChart && (
+        <GenerateChartModal
+          isModalOpen={isOpenGenerateModalChart}
+          onModalClose={() => setIsOpenGenerateModalChart(false)}
+          xVariables={dataHeader}
+          yVariables={dataHeader}
+          onSaveClick={handleGenerateChartSave}
         />
       )}
     </>
