@@ -34,6 +34,7 @@ import GenerateChartModal from "./generateChartModal";
 import { GenerateChartData } from "./generateChartModal/interface";
 import ViewChartButton from "../../shared/button/viewChartButton";
 import ChartFactory from "../../shared/chartFactory";
+import ResetButton from "../../shared/button/resetButton";
 
 const ViewAnalytics = () => {
   type Order = "asc" | "desc";
@@ -467,22 +468,25 @@ const ViewAnalytics = () => {
               style={{ width: 500 }}
             />
             <div className="align-button">
-              <FilterButton onClick={handleSelectPeriod} />
-
               {isGenerateChart ? (
                 <>
                   <GenerateAnalysisButton onClick={onGenerateAnalysisClick} />
                   <ViewChartButton
                     onClick={() => setIsOpenGenerateModalChart(true)}
                   />
+                  <ResetButton
+                    label="Limpar Gráfico"
+                    onClick={() => setChartBuildData(null)}
+                  />
                 </>
               ) : (
                 <>
                   <GenerateChartButton onClick={onGenerateChartClick} />
+                  <FilterButton onClick={handleSelectPeriod} />
                 </>
               )}
 
-              <SaveButton onClick={onSaveClick} />
+              <SaveButton disabled onClick={onSaveClick} />
             </div>
           </div>
 

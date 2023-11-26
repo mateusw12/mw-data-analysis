@@ -10,7 +10,7 @@ const ViewChartButton = (props: {
   return (
     <>
       <Button
-        color="info"
+        color="warning"
         startIcon={<BiLineChart />}
         size="small"
         variant="contained"

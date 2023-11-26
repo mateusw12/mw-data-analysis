@@ -1,8 +1,12 @@
 import Button from "@mui/material/Button";
 import { AiOutlineCheck } from "react-icons/ai";
 
-const SaveButton = (props: { onClick?: () => void; label?: string }) => {
-  const { onClick, label } = props;
+const SaveButton = (props: {
+  onClick?: () => void;
+  disabled?: boolean;
+  label?: string;
+}) => {
+  const { onClick, label, disabled } = props;
   return (
     <>
       <Button
@@ -11,6 +15,7 @@ const SaveButton = (props: { onClick?: () => void; label?: string }) => {
         size="small"
         variant="contained"
         type="submit"
+        disabled={disabled}
         onClick={onClick}
       >
         {label ? label : "Salvar"}

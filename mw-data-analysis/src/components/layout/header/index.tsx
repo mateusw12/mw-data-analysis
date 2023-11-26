@@ -10,7 +10,7 @@ const Header = () => {
       <div className="header">
         <Link to={"/"}>
           <div className="logo">
-            <img src="assets/pages/loog.png" alt="Logo" />
+            <img src="/assets/pages/loog.png" alt="Logo" />
           </div>
         </Link>
         <div className="header-right">
