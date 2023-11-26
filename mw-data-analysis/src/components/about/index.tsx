@@ -1,4 +1,5 @@
 import "./style.css";
+import Paper from "@mui/material/Paper";
 
 const About = () => {
   return (
@@ -110,30 +111,36 @@ const About = () => {
             </p>
           </div>
           <div className="images">
-            <img
-              src="/assets/pages/loog.png"
-              style={{
-                boxShadow: "0 0 10px rgba(0, 0, 0, 0.5)",
-                marginBottom: 30,
-                height: "350px"
-              }}
-              alt="Descrição da Imagem 1"
-            />
-            <img
-              src="/assets/pages/analitycs.png"
-              style={{
-                boxShadow: "0 0 10px rgba(0, 0, 0, 0.5)",
-                marginBottom: 30,
-              }}
-              alt="Descrição da Imagem 1"
-            />
-            <img
-              style={{
-                boxShadow: "0 0 10px rgba(0, 0, 0, 0.5)",
-              }}
-              src="/public/assets/pages/dashboards.webp"
-              alt="Descrição da Imagem 2"
-            />
+            <Paper elevation={6} style={{ marginBottom: 30, height: "400px" }}>
+              <img
+                style={{
+                  width: "100%",
+                  height: "100%",
+                }}
+                src="/assets/pages/loog.png"
+                alt="Logo tipo"
+              />
+            </Paper>
+            <Paper elevation={6} style={{ marginBottom: 30, height: "400px" }}>
+              <img
+                src="/assets/pages/analitycs.png"
+                style={{
+                  width: "100%",
+                  height: "100%",
+                }}
+                alt="Descrição da Imagem 1"
+              />
+            </Paper>
+            <Paper elevation={6} style={{ marginBottom: 30, height: "400px" }}>
+              <img
+                style={{
+                  width: "100%",
+                  height: "100%",
+                }}
+                src="/public/assets/pages/dashboards.webp"
+                alt="Descrição da Imagem 2"
+              />
+            </Paper>
           </div>
         </div>
       </div>
